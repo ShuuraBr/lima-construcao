@@ -55,7 +55,19 @@
   }
 
   body {
-    background: var(--color-fundo);
+    /* Malha construtiva do manual (módulo derivado do símbolo) como textura de
+       fundo — evita laterais mortas em telas largas sem competir com o conteúdo. */
+    background-color: var(--color-fundo);
+    background-image:
+      radial-gradient(120% 70% at 50% -10%, rgba(127, 32, 90, 0.14), transparent 55%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(201, 201, 201, 0.07) 0,
+        rgba(201, 201, 201, 0.07) 1px,
+        transparent 1px,
+        transparent 96px
+      );
+    background-repeat: no-repeat, repeat;
     color: var(--color-texto);
     font-family: var(--font-sans);
     line-height: 1.62;

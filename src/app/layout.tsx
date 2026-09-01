@@ -3,6 +3,7 @@ import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PageRails } from "@/components/layout/PageRails";
 import { site } from "@/lib/site";
 
 const montserrat = Montserrat({
@@ -80,6 +81,7 @@ export default function RootLayout({
         >
           Pular para o conteúdo
         </a>
+        <PageRails />
         <Header />
         <main id="conteudo" className="flex-1">
           {children}
