@@ -20,6 +20,11 @@ export default async function OrcamentoDetalhe({ params }: Props) {
   const o = await prisma.pedidoOrcamento.findUnique({ where: { id } });
   if (!o) notFound();
 
+  const contrato = await prisma.contrato.findUnique({
+    where: { pedidoOrcamentoId: o.id },
+    select: { id: true, numero: true },
+  });
+
   const dados: [string, string][] = [
     ["Cliente", o.nome],
     ["Empresa", o.empresa || "—"],
@@ -56,10 +61,29 @@ export default async function OrcamentoDetalhe({ params }: Props) {
             {o.nome}
           </h1>
         </div>
-        <StatusPill
-          label={statusMeta[o.status].label}
-          tom={statusMeta[o.status].tom}
-        />
+        <div className="flex flex-col items-end gap-2">
+          <StatusPill
+            label={statusMeta[o.status].label}
+            tom={statusMeta[o.status].tom}
+          />
+          {contrato ? (
+            <Link
+              href={`/painel/contratos/${contrato.id}`}
+              className="border border-borda px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.1em] text-texto-suave hover:text-acento-texto"
+            >
+              Contrato {contrato.numero}
+            </Link>
+          ) : (
+            o.status === "APROVADO" && (
+              <Link
+                href={`/painel/contratos/novo?de=${o.id}`}
+                className="bg-roxo px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.1em] text-branco transition-colors hover:bg-roxo-realce"
+              >
+                Gerar contrato
+              </Link>
+            )
+          )}
+        </div>
       </header>
 
       <section className="mt-6 border border-borda bg-superficie">

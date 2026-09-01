@@ -9,15 +9,11 @@ import { encerrarSessaoAction } from "@/app/painel/entrar/actions";
 const ativos = [
   { href: "/painel", label: "Painel geral", exact: true },
   { href: "/painel/orcamentos", label: "Orçamentos" },
+  { href: "/painel/contratos", label: "Contratos" },
   { href: "/painel/usuarios", label: "Usuários" },
 ];
 
-const emBreve = [
-  "Contratos",
-  "Prestação de serviços",
-  "Agenda de visitas",
-  "Mapa de obras",
-];
+const emBreve = ["Prestação de serviços", "Agenda de visitas", "Mapa de obras"];
 
 export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
   const pathname = usePathname();
