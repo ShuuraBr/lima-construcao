@@ -7,6 +7,10 @@ const nextConfig = {
   // Next.js da Hostinger e por qualquer deploy Node/VPS.
   output: "standalone",
 
+  // Raiz para o rastreamento de arquivos. Sem isto, um package.json numa pasta
+  // acima (ex.: a home do usuário) confunde a detecção.
+  outputFileTracingRoot: import.meta.dirname,
+
   // Garante que o engine do Prisma e o schema entrem no bundle standalone
   // (o rastreamento automático às vezes não pega o binário do engine).
   outputFileTracingIncludes: {

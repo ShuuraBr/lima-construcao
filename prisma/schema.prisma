@@ -1,7 +1,7 @@
 // Lima Construção e Instalação — modelo de dados
-// Etapa 1: apenas o formulário de orçamento do site institucional.
-// O painel administrativo (contratos, prestação de serviço, agenda, usuários)
-// entra em etapas seguintes e será adicionado a este mesmo schema.
+// Site institucional (formulário de orçamento) + painel administrativo.
+// Painel: usuários com convite seguro; contratos, prestação de serviço,
+// agenda e mapa entram nas próximas etapas neste mesmo schema.
 
 generator client {
   provider = "prisma-client-js"
@@ -61,4 +61,47 @@ model PedidoOrcamento {
 
   @@index([status, criadoEm])
   @@map("pedidos_orcamento")
+}
+
+// ============================================================
+//  PAINEL ADMINISTRATIVO
+// ============================================================
+
+/// Usuário interno do painel. Perfil único (sem hierarquia de acesso).
+/// A senha só existe depois que o usuário aceita o convite e a define.
+model Usuario {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  nome         String
+  cargo        String    @default("Colaborador")
+  senhaHash    String?   @map("senha_hash")
+  ativo        Boolean   @default(true)
+  ultimoAcesso DateTime? @map("ultimo_acesso")
+  criadoEm     DateTime  @default(now()) @map("criado_em")
+  atualizadoEm DateTime  @updatedAt @map("atualizado_em")
+
+  tokens TokenAcesso[]
+
+  @@map("usuarios")
+}
+
+enum TokenTipo {
+  CONVITE
+  RECUPERACAO
+}
+
+/// Token de uso único para o fluxo de convite / redefinição de senha.
+/// Guardamos apenas o hash do token; o valor em claro vai só no link enviado.
+model TokenAcesso {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique @map("token_hash")
+  tipo      TokenTipo @default(CONVITE)
+  usuarioId String    @map("usuario_id")
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  expiraEm  DateTime  @map("expira_em")
+  usadoEm   DateTime? @map("usado_em")
+  criadoEm  DateTime  @default(now()) @map("criado_em")
+
+  @@index([usuarioId])
+  @@map("tokens_acesso")
 }

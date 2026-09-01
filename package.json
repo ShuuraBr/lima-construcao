@@ -12,7 +12,8 @@
     "db:down": "docker compose down",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "painel:admin": "node scripts/criar-admin.mjs"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",
@@ -21,12 +22,15 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.10",
     "next": "16.3.4",
     "next-themes": "^0.4.6",
     "nodemailer": "^9.1.0",
     "prisma": "6.16.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "zod": "^4.5.4"

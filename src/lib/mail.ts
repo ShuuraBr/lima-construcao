@@ -16,7 +16,7 @@ type PedidoResumo = {
   anexo?: { filename: string; content: Buffer } | null;
 };
 
-function smtpConfigurado() {
+export function smtpConfigurado() {
   return Boolean(
     process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS,
   );
@@ -86,6 +86,38 @@ export async function enviarNotificacaoOrcamento(pedido: PedidoResumo) {
     attachments: pedido.anexo
       ? [{ filename: pedido.anexo.filename, content: pedido.anexo.content }]
       : undefined,
+  });
+
+  return { enviado: true as const };
+}
+
+/**
+ * Envia o convite de acesso ao painel. Sem SMTP, apenas registra no log — o
+ * chamador ainda recebe o link para repassar manualmente.
+ */
+export async function enviarConviteAcesso(params: {
+  email: string;
+  nome: string;
+  link: string;
+}) {
+  const corpo =
+    `Olá, ${params.nome}.\n\n` +
+    `Você foi convidado a acessar o painel administrativo da Lima Construção e Instalação.\n\n` +
+    `Defina sua senha por este link (válido por 3 dias):\n${params.link}\n\n` +
+    `Se você não esperava este convite, ignore este e-mail.`;
+
+  if (!smtpConfigurado()) {
+    console.info(
+      `[mail] SMTP não configurado — convite para ${params.email} não enviado.\nLink: ${params.link}`,
+    );
+    return { enviado: false as const };
+  }
+
+  await getTransporter().sendMail({
+    from: process.env.MAIL_FROM,
+    to: params.email,
+    subject: "Acesso ao painel — Lima Construção e Instalação",
+    text: corpo,
   });
 
   return { enviado: true as const };
