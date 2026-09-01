@@ -7,10 +7,19 @@ import { site } from "@/lib/site";
 export function Hero() {
   return (
     <section className="on-dark relative overflow-hidden border-b border-borda">
+      {/* Luz difusa — brilho roxo vindo do canto inferior direito */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 88% 78%, rgba(181,84,140,0.28), transparent 60%), radial-gradient(45% 55% at 8% 0%, rgba(127,32,90,0.35), transparent 65%)",
+        }}
+      />
       {/* Símbolo em marca d'água, baixa opacidade, atrás do texto */}
       <Simbolo
         aria-hidden
-        className="pointer-events-none absolute top-1/2 right-[4%] hidden h-[78%] w-auto -translate-y-1/2 text-logo/[0.08] sm:block"
+        className="pointer-events-none absolute top-1/2 right-[4%] hidden h-[78%] w-auto -translate-y-1/2 text-logo/[0.1] sm:block"
       />
       {/* Corte diagonal — mesmo ângulo da base do símbolo */}
       <div
@@ -18,7 +27,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(-9deg, transparent 0 61%, rgba(127,32,90,0.16) 61% 61.4%, transparent 61.4%)",
+            "linear-gradient(-9deg, transparent 0 61%, rgba(197,107,160,0.3) 61% 61.35%, transparent 61.35%)",
         }}
       />
       <Container className="relative py-20 sm:py-28 lg:py-36">

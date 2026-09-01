@@ -56,44 +56,48 @@
   color-scheme: light;
 }
 
-/* ---------- TEMA ESCURO ---------- */
+/* ---------- TEMA ESCURO ----------
+   Preto-ameixa (não preto puro): reduz a vibração do texto branco e dá
+   profundidade. As superfícies sobem em luz e saturação para criar
+   hierarquia clara: fundo < superfície < superfície-2 < faixa .on-dark.
+   Borda e grade puxam para o roxo (filete estrutural do manual). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-fundo: #000000;
-    --color-fundo-elevado: #0e0a0c;
-    --color-superficie: #100b0e;
-    --color-superficie-2: #181117;
-    --color-borda: rgba(201, 201, 201, 0.14);
-    --color-borda-forte: rgba(201, 201, 201, 0.3);
-    --color-texto: #c9c9c9;
+    --color-fundo: #0b0610;
+    --color-fundo-elevado: #150e1c;
+    --color-superficie: #191021;
+    --color-superficie-2: #241829;
+    --color-borda: rgba(199, 143, 179, 0.17);
+    --color-borda-forte: rgba(199, 143, 179, 0.34);
+    --color-texto: #ccc3c9;
     --color-texto-forte: #ffffff;
-    --color-texto-suave: #8b8388;
-    --color-acento-texto: #c56ba0;
+    --color-texto-suave: #998c94;
+    --color-acento-texto: #d67cb1;
     --color-logo: #ffffff;
-    --linha: rgba(201, 201, 201, 0.07);
-    --atmo-1: rgba(127, 32, 90, 0.22);
-    --atmo-2: rgba(61, 0, 41, 0.4);
-    --atmo-wm: rgba(255, 255, 255, 0.028);
+    --linha: rgba(181, 84, 140, 0.08);
+    --atmo-1: rgba(127, 32, 90, 0.32);
+    --atmo-2: rgba(61, 0, 41, 0.55);
+    --atmo-wm: rgba(216, 150, 190, 0.04);
     color-scheme: dark;
   }
 }
 
 [data-theme="dark"] {
-  --color-fundo: #000000;
-  --color-fundo-elevado: #0e0a0c;
-  --color-superficie: #100b0e;
-  --color-superficie-2: #181117;
-  --color-borda: rgba(201, 201, 201, 0.14);
-  --color-borda-forte: rgba(201, 201, 201, 0.3);
-  --color-texto: #c9c9c9;
+  --color-fundo: #0b0610;
+  --color-fundo-elevado: #150e1c;
+  --color-superficie: #191021;
+  --color-superficie-2: #241829;
+  --color-borda: rgba(199, 143, 179, 0.17);
+  --color-borda-forte: rgba(199, 143, 179, 0.34);
+  --color-texto: #ccc3c9;
   --color-texto-forte: #ffffff;
-  --color-texto-suave: #8b8388;
-  --color-acento-texto: #c56ba0;
+  --color-texto-suave: #998c94;
+  --color-acento-texto: #d67cb1;
   --color-logo: #ffffff;
-  --linha: rgba(201, 201, 201, 0.07);
-  --atmo-1: rgba(127, 32, 90, 0.22);
-  --atmo-2: rgba(61, 0, 41, 0.4);
-  --atmo-wm: rgba(255, 255, 255, 0.028);
+  --linha: rgba(181, 84, 140, 0.08);
+  --atmo-1: rgba(127, 32, 90, 0.32);
+  --atmo-2: rgba(61, 0, 41, 0.55);
+  --atmo-wm: rgba(216, 150, 190, 0.04);
   color-scheme: dark;
 }
 
@@ -103,54 +107,25 @@
 
 /* ---------- FAIXAS DE DESTAQUE ---------- */
 /* Hero, faixa de números, CTA, rodapé, cards de obra, aside do orçamento.
-   Definem o próprio fundo e redefinem os tokens (texto claro sobre fundo
-   escuro). Tema claro: Roxo profundo. Tema escuro: Preto Lima. */
+   Roxo profundo (#3D0029 — "fundo alternativo/capas" do manual) nos DOIS
+   temas: no claro contrasta com o Cinza-claro; no escuro se destaca do
+   preto-ameixa do conteúdo. */
 .on-dark {
   background-color: #3d0029;
   color: var(--color-texto);
   --color-fundo: #3d0029;
-  --color-fundo-elevado: #4a0d37;
-  --color-superficie: #48103a;
-  --color-superficie-2: #37062a;
-  --color-borda: rgba(255, 255, 255, 0.15);
-  --color-borda-forte: rgba(255, 255, 255, 0.32);
-  --color-texto: #dccdd6;
+  --color-fundo-elevado: #4d113e;
+  --color-superficie: #4a1039;
+  --color-superficie-2: #380a2c;
+  --color-borda: rgba(255, 202, 230, 0.18);
+  --color-borda-forte: rgba(255, 202, 230, 0.36);
+  --color-texto: #ddccd6;
   --color-texto-forte: #ffffff;
-  --color-texto-suave: #c6a8bb;
-  --color-acento-texto: #e79cc8;
+  --color-texto-suave: #c8aabc;
+  --color-acento-texto: #ec9ecc;
   --color-logo: #ffffff;
   --linha: rgba(255, 255, 255, 0.05);
   color-scheme: dark;
-}
-
-:root[data-theme="dark"] .on-dark {
-  background-color: #000000;
-  --color-fundo: #000000;
-  --color-fundo-elevado: #0e0a0c;
-  --color-superficie: #14090f;
-  --color-superficie-2: #1c1119;
-  --color-borda: rgba(201, 201, 201, 0.16);
-  --color-borda-forte: rgba(201, 201, 201, 0.32);
-  --color-texto: #c9c9c9;
-  --color-texto-suave: #9a9298;
-  --color-acento-texto: #c56ba0;
-  --linha: rgba(201, 201, 201, 0.07);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .on-dark {
-    background-color: #000000;
-    --color-fundo: #000000;
-    --color-fundo-elevado: #0e0a0c;
-    --color-superficie: #14090f;
-    --color-superficie-2: #1c1119;
-    --color-borda: rgba(201, 201, 201, 0.16);
-    --color-borda-forte: rgba(201, 201, 201, 0.32);
-    --color-texto: #c9c9c9;
-    --color-texto-suave: #9a9298;
-    --color-acento-texto: #c56ba0;
-    --linha: rgba(201, 201, 201, 0.07);
-  }
 }
 
 @layer base {
