@@ -16,7 +16,7 @@ export const site = {
   regiao: "Distrito Federal e entorno",
   contato: {
     responsavel: "Erick",
-    cargo: "Engenheiro Chefe",
+    cargo: "Engenheiro Responsável",
     email: "erick@limaconstrucao.com.br",
     telefone: "+55 61 9 9999-9999",
     telefoneHref: "tel:+5561999999999",
@@ -36,7 +36,7 @@ export const credenciais = [
   { valor: "5 anos", rotulo: "Garantia em contrato" },
   { valor: "45 dias", rotulo: "Prazo padrão de entrega" },
   { valor: "CREA-DF", rotulo: "Empresa registrada" },
-  { valor: "8 obras", rotulo: "Em execução — Brasal e Luner" },
+  { valor: "8 obras", rotulo: "Brasal e Luner · Distrito Federal" },
 ] as const;
 
 export type Servico = {
@@ -104,15 +104,6 @@ export const servicos: Servico[] = [
     spec: "Retrofit de fachada",
     valorFormulario: "Acabamento / Revestimento",
   },
-  {
-    slug: "alvenaria",
-    nome: "Alvenaria",
-    resumo: "Elevação e regularização de vedação em bloco.",
-    descricao:
-      "Elevação e regularização de vedação em bloco, com amarração, verga e contraverga conforme especificação estrutural.",
-    spec: "Verga e contraverga",
-    valorFormulario: "Alvenaria",
-  },
 ];
 
 export const opcaoMaisDeUma = {
@@ -132,7 +123,7 @@ export const obras = [
     cliente: "Luner Empreendimentos",
     local: "Jardim Botânico · Brasília — DF",
     descricao:
-      "Obra de instalação elétrica e hidráulica entregue dentro do prazo, com teste de estanqueidade e checklist final documentado.",
+      "Paredes e forro executados em drywall, entregues dentro do prazo, com nivelamento a laser e checklist final documentado.",
     metrica: "1 obra · concluída · garantia de 5 anos ativa",
   },
 ] as const;

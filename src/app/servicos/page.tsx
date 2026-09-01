@@ -7,7 +7,7 @@ import { servicos } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Serviços",
   description:
-    "Drywall, steel frame, elétrica, hidráulica, forro, acabamento/revestimento e alvenaria — executados por equipe própria e fixa da Lima Construção e Instalação.",
+    "Drywall, steel frame, elétrica, hidráulica, forro e acabamento/revestimento — executados por equipe própria e fixa da Lima Construção e Instalação.",
   alternates: { canonical: "/servicos" },
 };
 
@@ -17,7 +17,7 @@ export default function ServicosPage() {
       <Section className="border-b border-borda bg-preto">
         <SectionHeader
           eyebrow="Serviços"
-          titulo="Sete frentes, executadas pela mesma equipe."
+          titulo="Seis frentes, executadas pela mesma equipe."
           texto="Cada frente pode ser contratada isoladamente ou em conjunto. A cotação é feita por um engenheiro da Lima após análise de escopo, prazo e visita técnica — não há calculadora automática de preço."
         />
       </Section>

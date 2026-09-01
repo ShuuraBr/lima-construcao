@@ -48,7 +48,7 @@ export default function HomePage() {
       <Section id="servicos" bordaTopo>
         <SectionHeader
           eyebrow="Serviços"
-          titulo="Sete frentes, uma equipe."
+          titulo="Seis frentes, uma equipe."
           texto="Todas as frentes são executadas internamente e podem ser contratadas em conjunto ou isoladamente. A cotação é feita pela equipe da Lima após a análise do pedido — sem cálculo automático de preço."
         />
         <div className="mt-11 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -99,7 +99,7 @@ export default function HomePage() {
           Dúvida antes de orçar?
         </p>
         <p className="mt-3 max-w-[52ch] text-lg text-texto">
-          Falar direto com o engenheiro chefe é o caminho mais curto.{" "}
+          Falar direto com o engenheiro responsável é o caminho mais curto.{" "}
           <Link href="/contato" className="text-roxo-realce underline-offset-4 hover:underline">
             Ver contato
           </Link>

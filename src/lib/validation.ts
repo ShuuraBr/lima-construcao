@@ -7,7 +7,6 @@ export const SERVICO_VALORES = [
   "Hidráulica",
   "Forro",
   "Acabamento / Revestimento",
-  "Alvenaria",
   "Mais de uma frente",
 ] as const;
 
@@ -18,7 +17,6 @@ const SERVICO_MAP: Record<(typeof SERVICO_VALORES)[number], string> = {
   "Hidráulica": "HIDRAULICA",
   "Forro": "FORRO",
   "Acabamento / Revestimento": "ACABAMENTO",
-  "Alvenaria": "ALVENARIA",
   "Mais de uma frente": "MAIS_DE_UMA_FRENTE",
 };
 

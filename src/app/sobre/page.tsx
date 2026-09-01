@@ -18,7 +18,7 @@ export default function SobrePage() {
         <SectionHeader
           eyebrow="A empresa"
           titulo="Premium sem ostentação, direta sem ser fria."
-          texto="A Lima é uma empresa de construção civil do Distrito Federal. Nasceu Lima Gesso, especialista em drywall, e ampliou a atuação para elétrica, hidráulica, forro, revestimento, alvenaria e checklist de obra — passando a se apresentar como Lima Construção e Instalação."
+          texto="A Lima é uma empresa de construção civil do Distrito Federal. Nasceu Lima Gesso, especialista em drywall, e ampliou a atuação para elétrica, hidráulica, forro, revestimento e checklist de obra — passando a se apresentar como Lima Construção e Instalação."
         />
       </Section>
 

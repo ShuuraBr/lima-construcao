@@ -19,7 +19,7 @@ enum ServicoTipo {
   HIDRAULICA
   FORRO
   ACABAMENTO
-  ALVENARIA
+  ALVENARIA // não oferecida no site por ora (sem mão de obra) — mantida para uso futuro
   MAIS_DE_UMA_FRENTE
 }
 

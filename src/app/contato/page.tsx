@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contato",
   description:
-    "Fale com o engenheiro chefe da Lima Construção e Instalação. Atendimento técnico direto, Brasília — DF e entorno.",
+    "Fale com o engenheiro responsável da Lima Construção e Instalação. Atendimento técnico direto, Brasília — DF e entorno.",
   alternates: { canonical: "/contato" },
 };
 
@@ -37,7 +37,7 @@ export default function ContatoPage() {
       <Section className="border-b border-borda bg-preto">
         <SectionHeader
           eyebrow="Contato"
-          titulo="Falar com o engenheiro chefe."
+          titulo="Falar com o engenheiro responsável."
           texto="Para pedidos de orçamento, use o formulário — o pedido entra organizado no painel da equipe. Para as demais conversas, os canais diretos estão abaixo."
         />
         <div className="mt-8">
