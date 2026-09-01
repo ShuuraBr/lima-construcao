@@ -1,16 +1,19 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: mysql:8.0
     container_name: lima-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: lima
-      POSTGRES_PASSWORD: lima
-      POSTGRES_DB: lima
+      MYSQL_DATABASE: lima
+      MYSQL_USER: lima
+      MYSQL_PASSWORD: lima
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password
     ports:
-      - "5432:5432"
+      # host 3307 (3306 costuma já estar ocupado por um MySQL local)
+      - "3307:3306"
     volumes:
-      - lima-db-data:/var/lib/postgresql/data
+      - lima-db-data:/var/lib/mysql
 
 volumes:
   lima-db-data:

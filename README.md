@@ -1,7 +1,7 @@
 # Lima Construção e Instalação — site
 
 Site institucional da Lima Construção e Instalação. Next.js (App Router) +
-PostgreSQL. O painel administrativo (contratos, prestação de serviço, agenda,
+MySQL. O painel administrativo (contratos, prestação de serviço, agenda,
 mapa de obras, usuários) entra em etapas seguintes, no mesmo projeto.
 
 ## Stack
@@ -11,9 +11,9 @@ mapa de obras, usuários) entra em etapas seguintes, no mesmo projeto.
 | Framework     | Next.js 16 (App Router, Turbopack)            |
 | Linguagem     | TypeScript                                    |
 | Estilo        | Tailwind CSS v4 + design system da marca      |
-| Banco         | PostgreSQL + Prisma                           |
+| Banco         | MySQL 8 + Prisma                              |
 | E-mail        | SMTP (Nodemailer) — conta Hostinger em prod   |
-| Deploy        | VPS Hostinger (Node + Postgres)               |
+| Deploy        | Hostinger — hospedagem Next.js (output standalone) |
 
 ## Rodar localmente
 
@@ -22,7 +22,7 @@ Pré-requisitos: Node 20.9+, Docker.
 ```bash
 cp .env.example .env      # ajuste se necessário
 npm install
-npm run db:up             # sobe o Postgres via docker compose
+npm run db:up             # sobe o MySQL via docker compose (porta 3307)
 npm run db:migrate        # aplica as migrações
 npm run dev               # http://localhost:3000
 ```
@@ -94,28 +94,36 @@ Configuração no painel:
 | Gerenciador           | `npm`          |
 | Diretório de saída    | `.next`        |
 
+O `next.config.mjs` usa `output: "standalone"` — o build gera um servidor
+mínimo em `.next/standalone/` (formato esperado pela Hostinger).
+
 Variáveis de ambiente (obrigatórias — o build passa sem elas, mas o formulário
 de orçamento não funciona em produção sem banco):
 
 ```
-DATABASE_URL           string de conexão do PostgreSQL de produção
-NEXT_PUBLIC_SITE_URL   https://limaconstrucao.com.br  (ou a URL temporária da Hostinger)
-MAIL_FROM              Site Lima <site@limaconstrucao.com.br>
-MAIL_TO                erick@limaconstrucao.com.br
-SMTP_HOST              smtp.hostinger.com
-SMTP_PORT              465
-SMTP_SECURE            true
-SMTP_USER              site@limaconstrucao.com.br
-SMTP_PASS              (senha da conta de e-mail)
+DATABASE_URL          mysql://USUARIO:SENHA@HOST:3306/NOME_DO_BANCO
+                      (senha com @ vira %40, : vira %3A, etc.)
+NEXT_PUBLIC_SITE_URL  https://limaconstrucao.com.br  (ou a URL temporária da Hostinger)
+MAIL_FROM             Site Lima <site@limaconstrucao.com.br>
+MAIL_TO               erick@limaconstrucao.com.br
+SMTP_HOST             smtp.hostinger.com
+SMTP_PORT             465
+SMTP_SECURE           true
+SMTP_USER             site@limaconstrucao.com.br
+SMTP_PASS             (senha da conta de e-mail)
 ```
 
-Depois de conectar o banco, aplicar as migrações **uma vez**:
+Criar as tabelas no banco de produção (uma vez). Duas opções:
 
-```bash
-npm run db:deploy      # prisma migrate deploy
-```
+1. **phpMyAdmin** (hPanel → Bancos de dados → phpMyAdmin → aba SQL): colar o
+   conteúdo de `prisma/migrations/*/migration.sql`.
+2. **`prisma migrate deploy`** a partir de uma máquina com o IP liberado em
+   "MySQL remoto" no hPanel:
+   ```bash
+   DATABASE_URL="mysql://..." npm run db:deploy
+   ```
 
-Sem `DATABASE_URL` + migrações, o `/orcamento` responde com mensagem de erro ao
+Sem `DATABASE_URL` + tabelas, o `/orcamento` responde com mensagem de erro ao
 visitante (não quebra a página). Sem `SMTP_*`, a notificação não é enviada (o
 pedido fica só no banco).
 

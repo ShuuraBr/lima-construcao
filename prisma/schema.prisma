@@ -8,7 +8,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  // MySQL — é o banco disponível na hospedagem da Hostinger (porta 3306).
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -33,24 +34,24 @@ enum OrcamentoStatus {
 
 /// Pedido de orçamento recebido pelo formulário público do site.
 model PedidoOrcamento {
-  id            String          @id @default(cuid())
-  protocolo     String          @unique
-  status        OrcamentoStatus @default(NOVO)
+  id        String          @id @default(cuid())
+  protocolo String          @unique
+  status    OrcamentoStatus @default(NOVO)
 
   // Contato de quem solicita
-  nome          String
-  empresa       String?
-  email         String
-  telefone      String
+  nome     String
+  empresa  String?
+  email    String
+  telefone String
 
   // Dados da obra
   servico       ServicoTipo
-  enderecoObra  String    @map("endereco_obra")
+  enderecoObra  String    @map("endereco_obra") @db.VarChar(255)
   metragemM2    Int?      @map("metragem_m2")
   prazoDesejado String?   @map("prazo_desejado")
   dataInicio    DateTime? @map("data_inicio")
-  mensagem      String?
-  anexoNome     String?   @map("anexo_nome")
+  mensagem      String?   @db.Text
+  anexoNome     String?   @map("anexo_nome") @db.VarChar(255)
 
   // Metadados
   origem       String   @default("site")
