@@ -80,6 +80,45 @@ estrutural). Tema escuro único — preto é a base de ~90% das aplicações da 
 Ver `.env.example`. Em produção, definir `DATABASE_URL`, o bloco `SMTP_*`,
 `MAIL_FROM`, `MAIL_TO` e `NEXT_PUBLIC_SITE_URL`.
 
+## Deploy (Hostinger — hospedagem Next.js por Git)
+
+Configuração no painel:
+
+| Campo                 | Valor          |
+| --------------------- | -------------- |
+| Configuração          | Next.js        |
+| Branch                | `master`       |
+| Node                  | 22.x           |
+| Diretório raiz        | `./`           |
+| Comando de construção | `npm run build`|
+| Gerenciador           | `npm`          |
+| Diretório de saída    | `.next`        |
+
+Variáveis de ambiente (obrigatórias — o build passa sem elas, mas o formulário
+de orçamento não funciona em produção sem banco):
+
+```
+DATABASE_URL           string de conexão do PostgreSQL de produção
+NEXT_PUBLIC_SITE_URL   https://limaconstrucao.com.br  (ou a URL temporária da Hostinger)
+MAIL_FROM              Site Lima <site@limaconstrucao.com.br>
+MAIL_TO                erick@limaconstrucao.com.br
+SMTP_HOST              smtp.hostinger.com
+SMTP_PORT              465
+SMTP_SECURE            true
+SMTP_USER              site@limaconstrucao.com.br
+SMTP_PASS              (senha da conta de e-mail)
+```
+
+Depois de conectar o banco, aplicar as migrações **uma vez**:
+
+```bash
+npm run db:deploy      # prisma migrate deploy
+```
+
+Sem `DATABASE_URL` + migrações, o `/orcamento` responde com mensagem de erro ao
+visitante (não quebra a página). Sem `SMTP_*`, a notificação não é enviada (o
+pedido fica só no banco).
+
 ## Pendências desta etapa
 
 - Conta SMTP da Hostinger para envio real das notificações.
