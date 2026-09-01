@@ -33,7 +33,7 @@ export default async function ServicoPage({ params }: Params) {
 
   return (
     <>
-      <Section className="on-dark border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda">
         <Eyebrow>Serviço {String(indice + 1).padStart(2, "0")}</Eyebrow>
         <h1 className="mt-4 max-w-[16ch] text-4xl font-black text-branco sm:text-5xl">
           {servico.nome}

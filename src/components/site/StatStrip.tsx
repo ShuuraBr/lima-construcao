@@ -3,10 +3,10 @@ import { credenciais } from "@/lib/site";
 
 export function StatStrip() {
   return (
-    <div className="on-dark border-b border-borda bg-roxo-profundo">
+    <div className="on-dark border-b border-borda">
       <Container className="grid grid-cols-2 gap-px bg-borda px-0 lg:grid-cols-4">
         {credenciais.map((c) => (
-          <div key={c.rotulo} className="bg-roxo-profundo px-5 py-6 sm:px-6">
+          <div key={c.rotulo} className="bg-fundo px-5 py-6 sm:px-6">
             <div className="font-mono text-2xl text-branco sm:text-[1.75rem]">
               {c.valor}
             </div>

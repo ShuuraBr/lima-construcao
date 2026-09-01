@@ -5,15 +5,16 @@
    Paleta e tipografia medidas no Manual de Identidade v2.0.
 
    Três temas: claro (padrão), escuro e automático (segue o SO).
-   O preto é a assinatura da marca — no tema claro ele reaparece
-   nas faixas de destaque (hero, faixa de números, CTA, rodapé),
-   marcadas com a classe `.on-dark`.
+   Tema claro = leitura "documento" do manual (Cinza-claro de fundo,
+   Cinza-chumbo no texto, Roxo Lima como assinatura).
+   Faixas de destaque (hero, faixa de números, CTA, rodapé, cards de
+   obra) usam `.on-dark`: Roxo profundo no tema claro, Preto no escuro.
    ============================================================ */
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  /* Paleta oficial — fixa, não muda com o tema */
+  /* Paleta oficial — fixa */
   --color-preto: #000000;
   --color-roxo: #7f205a;
   --color-roxo-profundo: #3d0029;
@@ -23,110 +24,133 @@
   --color-cinza-claro: #f2f2f2;
   --color-branco: #ffffff;
 
+  /* Tokens semânticos — valores do TEMA CLARO (padrão).
+     Sobrescritos por [data-theme="dark"] e por .on-dark. */
+  --color-fundo: #f1f0f2;
+  --color-fundo-elevado: #ffffff;
+  --color-superficie: #ffffff;
+  --color-superficie-2: #f4f2f5;
+  --color-borda: rgba(43, 43, 43, 0.16);
+  --color-borda-forte: rgba(43, 43, 43, 0.34);
+  --color-texto: #2b2b2b;
+  --color-texto-forte: #17141a;
+  --color-texto-suave: #6f6873;
+  --color-acento-texto: #7f205a;
+  --color-logo: #7f205a;
+
   /* Tipografia — pilha de fallback obrigatória do manual */
   --font-display: var(--font-montserrat), Arial, sans-serif;
   --font-sans: var(--font-inter), Calibri, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, Consolas, monospace;
 
-  /* Layout / motion */
   --spacing-chanfro: 0.875rem;
   --ease-estrutural: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Tokens semânticos: as utilitárias (bg-fundo, text-texto-forte…) apontam
-   para variáveis que mudam por tema. */
-@theme inline {
-  --color-fundo: var(--c-fundo);
-  --color-fundo-elevado: var(--c-fundo-elevado);
-  --color-superficie: var(--c-superficie);
-  --color-superficie-2: var(--c-superficie-2);
-  --color-borda: var(--c-borda);
-  --color-borda-forte: var(--c-borda-forte);
-  --color-texto: var(--c-texto);
-  --color-texto-forte: var(--c-texto-forte);
-  --color-texto-suave: var(--c-texto-suave);
-  --color-acento-texto: var(--c-acento-texto);
-  --color-logo: var(--c-logo);
-}
-
-/* ---------- TEMA CLARO (padrão) ---------- */
+/* ---------- extras por tema (não são utilitárias Tailwind) ---------- */
 :root {
-  --c-fundo: #f3f0f2;
-  --c-fundo-elevado: #ffffff;
-  --c-superficie: #ffffff;
-  --c-superficie-2: #f7f3f6;
-  --c-borda: rgba(43, 43, 43, 0.14);
-  --c-borda-forte: rgba(43, 43, 43, 0.32);
-  --c-texto: #3d363b;
-  --c-texto-forte: #141013;
-  --c-texto-suave: #6c646a;
-  --c-acento-texto: #7a1f56;
-  --c-logo: #7f205a;
-
-  --c-linha: rgba(43, 43, 43, 0.055);
-  --c-vinheta: rgba(127, 32, 90, 0.06);
-
+  --linha: rgba(43, 43, 43, 0.05);
+  --atmo-1: rgba(127, 32, 90, 0.09);
+  --atmo-2: rgba(181, 84, 140, 0.08);
+  --atmo-wm: rgba(127, 32, 90, 0.05);
   color-scheme: light;
 }
 
 /* ---------- TEMA ESCURO ---------- */
-/* valores de fundo escuro, reaproveitados também em `.on-dark` */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --c-fundo: #000000;
-    --c-fundo-elevado: #0e0a0c;
-    --c-superficie: #100b0e;
-    --c-superficie-2: #181117;
-    --c-borda: rgba(201, 201, 201, 0.14);
-    --c-borda-forte: rgba(201, 201, 201, 0.3);
-    --c-texto: #c9c9c9;
-    --c-texto-forte: #ffffff;
-    --c-texto-suave: #8b8388;
-    --c-acento-texto: #c56ba0;
-    --c-logo: #ffffff;
-
-    --c-linha: rgba(201, 201, 201, 0.07);
-    --c-vinheta: rgba(127, 32, 90, 0.14);
-
+  :root:not([data-theme="light"]) {
+    --color-fundo: #000000;
+    --color-fundo-elevado: #0e0a0c;
+    --color-superficie: #100b0e;
+    --color-superficie-2: #181117;
+    --color-borda: rgba(201, 201, 201, 0.14);
+    --color-borda-forte: rgba(201, 201, 201, 0.3);
+    --color-texto: #c9c9c9;
+    --color-texto-forte: #ffffff;
+    --color-texto-suave: #8b8388;
+    --color-acento-texto: #c56ba0;
+    --color-logo: #ffffff;
+    --linha: rgba(201, 201, 201, 0.07);
+    --atmo-1: rgba(127, 32, 90, 0.22);
+    --atmo-2: rgba(61, 0, 41, 0.4);
+    --atmo-wm: rgba(255, 255, 255, 0.028);
     color-scheme: dark;
   }
 }
 
 [data-theme="dark"] {
-  --c-fundo: #000000;
-  --c-fundo-elevado: #0e0a0c;
-  --c-superficie: #100b0e;
-  --c-superficie-2: #181117;
-  --c-borda: rgba(201, 201, 201, 0.14);
-  --c-borda-forte: rgba(201, 201, 201, 0.3);
-  --c-texto: #c9c9c9;
-  --c-texto-forte: #ffffff;
-  --c-texto-suave: #8b8388;
-  --c-acento-texto: #c56ba0;
-  --c-logo: #ffffff;
-
-  --c-linha: rgba(201, 201, 201, 0.07);
-  --c-vinheta: rgba(127, 32, 90, 0.14);
-
+  --color-fundo: #000000;
+  --color-fundo-elevado: #0e0a0c;
+  --color-superficie: #100b0e;
+  --color-superficie-2: #181117;
+  --color-borda: rgba(201, 201, 201, 0.14);
+  --color-borda-forte: rgba(201, 201, 201, 0.3);
+  --color-texto: #c9c9c9;
+  --color-texto-forte: #ffffff;
+  --color-texto-suave: #8b8388;
+  --color-acento-texto: #c56ba0;
+  --color-logo: #ffffff;
+  --linha: rgba(201, 201, 201, 0.07);
+  --atmo-1: rgba(127, 32, 90, 0.22);
+  --atmo-2: rgba(61, 0, 41, 0.4);
+  --atmo-wm: rgba(255, 255, 255, 0.028);
   color-scheme: dark;
 }
 
-/* ---------- FAIXAS DE DESTAQUE (sempre escuras) ---------- */
-/* Redefine os tokens localmente, então eyebrows, textos e cards aninhados
-   ficam corretos sobre preto mesmo no tema claro. */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* ---------- FAIXAS DE DESTAQUE ---------- */
+/* Hero, faixa de números, CTA, rodapé, cards de obra, aside do orçamento.
+   Definem o próprio fundo e redefinem os tokens (texto claro sobre fundo
+   escuro). Tema claro: Roxo profundo. Tema escuro: Preto Lima. */
 .on-dark {
-  --c-fundo: #000000;
-  --c-fundo-elevado: #0e0a0c;
-  --c-superficie: #14090f;
-  --c-superficie-2: #1c1119;
-  --c-borda: rgba(201, 201, 201, 0.16);
-  --c-borda-forte: rgba(201, 201, 201, 0.32);
-  --c-texto: #c9c9c9;
-  --c-texto-forte: #ffffff;
-  --c-texto-suave: #9a9298;
-  --c-acento-texto: #c56ba0;
-  --c-logo: #ffffff;
+  background-color: #3d0029;
+  color: var(--color-texto);
+  --color-fundo: #3d0029;
+  --color-fundo-elevado: #4a0d37;
+  --color-superficie: #48103a;
+  --color-superficie-2: #37062a;
+  --color-borda: rgba(255, 255, 255, 0.15);
+  --color-borda-forte: rgba(255, 255, 255, 0.32);
+  --color-texto: #dccdd6;
+  --color-texto-forte: #ffffff;
+  --color-texto-suave: #c6a8bb;
+  --color-acento-texto: #e79cc8;
+  --color-logo: #ffffff;
+  --linha: rgba(255, 255, 255, 0.05);
   color-scheme: dark;
+}
+
+:root[data-theme="dark"] .on-dark {
+  background-color: #000000;
+  --color-fundo: #000000;
+  --color-fundo-elevado: #0e0a0c;
+  --color-superficie: #14090f;
+  --color-superficie-2: #1c1119;
+  --color-borda: rgba(201, 201, 201, 0.16);
+  --color-borda-forte: rgba(201, 201, 201, 0.32);
+  --color-texto: #c9c9c9;
+  --color-texto-suave: #9a9298;
+  --color-acento-texto: #c56ba0;
+  --linha: rgba(201, 201, 201, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .on-dark {
+    background-color: #000000;
+    --color-fundo: #000000;
+    --color-fundo-elevado: #0e0a0c;
+    --color-superficie: #14090f;
+    --color-superficie-2: #1c1119;
+    --color-borda: rgba(201, 201, 201, 0.16);
+    --color-borda-forte: rgba(201, 201, 201, 0.32);
+    --color-texto: #c9c9c9;
+    --color-texto-suave: #9a9298;
+    --color-acento-texto: #c56ba0;
+    --linha: rgba(201, 201, 201, 0.07);
+  }
 }
 
 @layer base {
@@ -139,19 +163,14 @@
   }
 
   body {
-    /* Malha construtiva do manual como textura de fundo — evita laterais
-       mortas em telas largas sem competir com o conteúdo. */
     background-color: var(--color-fundo);
-    background-image:
-      radial-gradient(120% 70% at 50% -10%, var(--c-vinheta), transparent 55%),
-      repeating-linear-gradient(
-        90deg,
-        var(--c-linha) 0,
-        var(--c-linha) 1px,
-        transparent 1px,
-        transparent 96px
-      );
-    background-repeat: no-repeat, repeat;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--linha) 0,
+      var(--linha) 1px,
+      transparent 1px,
+      transparent 96px
+    );
     color: var(--color-texto);
     font-family: var(--font-sans);
     line-height: 1.62;
@@ -196,21 +215,8 @@
 }
 
 @layer components {
-  /* Corte diagonal / blocos facetados — chanfro em dois cantos opostos,
-     mesmo vocabulário do símbolo (nunca cantos arredondados). */
+  /* Corte diagonal / blocos facetados — chanfro em dois cantos opostos. */
   .facet {
-    clip-path: polygon(
-      0 0,
-      calc(100% - var(--spacing-chanfro)) 0,
-      100% var(--spacing-chanfro),
-      100% 100%,
-      var(--spacing-chanfro) 100%,
-      0 calc(100% - var(--spacing-chanfro))
-    );
-  }
-
-  .facet-sm {
-    --spacing-chanfro: 0.5rem;
     clip-path: polygon(
       0 0,
       calc(100% - var(--spacing-chanfro)) 0,
@@ -228,4 +234,24 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* Atmosfera — deriva lenta da luz difusa nas laterais */
+@keyframes atmo-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, 4%, 0) scale(1.12);
+  }
+}
+@keyframes atmo-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-6%, -3%, 0) scale(1.08);
+  }
 }

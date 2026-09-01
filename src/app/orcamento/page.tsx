@@ -20,7 +20,7 @@ export default async function OrcamentoPage({ searchParams }: Props) {
   return (
     <section className="border-b border-borda bg-fundo py-16 sm:py-20">
       <Container className="grid gap-0 border border-borda md:grid-cols-[0.85fr_1.15fr]">
-        <aside className="on-dark bg-roxo-profundo p-8">
+        <aside className="on-dark p-8">
           <Eyebrow>Solicitação de orçamento</Eyebrow>
           <h1 className="mt-4 text-3xl font-extrabold text-branco">
             Descreva a obra. A cotação é feita pela equipe.

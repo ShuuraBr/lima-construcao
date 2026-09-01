@@ -34,7 +34,7 @@ const canais = [
 export default function ContatoPage() {
   return (
     <>
-      <Section className="on-dark border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda">
         <SectionHeader
           eyebrow="Contato"
           titulo="Falar com o engenheiro responsável."

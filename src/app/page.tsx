@@ -55,7 +55,7 @@ export default function HomePage() {
           {servicos.map((servico, i) => (
             <ServiceCard key={servico.slug} servico={servico} indice={i + 1} />
           ))}
-          <div className="on-dark border border-borda bg-preto p-6">
+          <div className="on-dark border border-borda p-6">
             <span className="font-mono text-xs tracking-[0.1em] text-acento-texto">
               —
             </span>

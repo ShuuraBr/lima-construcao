@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function SobrePage() {
   return (
     <>
-      <Section className="on-dark border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda">
         <SectionHeader
           eyebrow="A empresa"
           titulo="Premium sem ostentação, direta sem ser fria."

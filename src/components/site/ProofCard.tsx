@@ -10,7 +10,7 @@ export function ProofCard({
   metrica: string;
 }) {
   return (
-    <article className="on-dark border border-borda bg-preto p-8">
+    <article className="on-dark border border-borda p-8">
       <h3 className="font-display text-2xl font-black tracking-[0.01em] text-branco">
         {cliente}
       </h3>

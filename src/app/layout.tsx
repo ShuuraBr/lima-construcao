@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PageRails } from "@/components/layout/PageRails";
+import { AtmosphereLayer } from "@/components/layout/AtmosphereLayer";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { site } from "@/lib/site";
 
@@ -87,6 +88,7 @@ export default function RootLayout({
           >
             Pular para o conteúdo
           </a>
+          <AtmosphereLayer />
           <PageRails />
           <Header />
           <main id="conteudo" className="flex-1">

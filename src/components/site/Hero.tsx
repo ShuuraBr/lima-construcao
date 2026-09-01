@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="on-dark relative overflow-hidden border-b border-borda bg-preto">
+    <section className="on-dark relative overflow-hidden border-b border-borda">
       {/* Símbolo em marca d'água, baixa opacidade, atrás do texto */}
       <Simbolo
         aria-hidden
