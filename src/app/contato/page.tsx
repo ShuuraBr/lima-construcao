@@ -34,7 +34,7 @@ const canais = [
 export default function ContatoPage() {
   return (
     <>
-      <Section className="border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda bg-preto">
         <SectionHeader
           eyebrow="Contato"
           titulo="Falar com o engenheiro responsável."
@@ -49,13 +49,13 @@ export default function ContatoPage() {
         <div className="grid gap-px border border-borda bg-borda md:grid-cols-3">
           {canais.map((c) => (
             <div key={c.k} className="bg-superficie p-6">
-              <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-roxo-realce">
+              <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-acento-texto">
                 {c.k}
               </div>
               {c.href ? (
                 <a
                   href={c.href}
-                  className="mt-2.5 block font-mono text-[0.92rem] tracking-[0.02em] text-texto-forte hover:text-roxo-realce"
+                  className="mt-2.5 block font-mono text-[0.92rem] tracking-[0.02em] text-texto-forte hover:text-acento-texto"
                 >
                   {c.v}
                 </a>

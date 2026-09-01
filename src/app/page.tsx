@@ -30,7 +30,7 @@ export default function HomePage() {
             ] as const
           ).map(([rotulo, texto]) => (
             <div key={rotulo} className="bg-superficie p-6">
-              <span className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-roxo-realce">
+              <span className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-acento-texto">
                 {rotulo}
               </span>
               <p className="mt-3 text-sm text-texto-suave">{texto}</p>
@@ -55,8 +55,8 @@ export default function HomePage() {
           {servicos.map((servico, i) => (
             <ServiceCard key={servico.slug} servico={servico} indice={i + 1} />
           ))}
-          <div className="border border-borda bg-preto p-6">
-            <span className="font-mono text-xs tracking-[0.1em] text-roxo-realce">
+          <div className="on-dark border border-borda bg-preto p-6">
+            <span className="font-mono text-xs tracking-[0.1em] text-acento-texto">
               —
             </span>
             <h3 className="mt-3.5 text-lg font-bold text-branco">
@@ -100,7 +100,7 @@ export default function HomePage() {
         </p>
         <p className="mt-3 max-w-[52ch] text-lg text-texto">
           Falar direto com o engenheiro responsável é o caminho mais curto.{" "}
-          <Link href="/contato" className="text-roxo-realce underline-offset-4 hover:underline">
+          <Link href="/contato" className="text-acento-texto underline-offset-4 hover:underline">
             Ver contato
           </Link>
           .

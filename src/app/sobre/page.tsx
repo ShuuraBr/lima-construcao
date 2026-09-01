@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function SobrePage() {
   return (
     <>
-      <Section className="border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda bg-preto">
         <SectionHeader
           eyebrow="A empresa"
           titulo="Premium sem ostentação, direta sem ser fria."
@@ -32,7 +32,7 @@ export default function SobrePage() {
             ] as const
           ).map(([rotulo, texto]) => (
             <div key={rotulo} className="bg-superficie p-7">
-              <span className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-roxo-realce">
+              <span className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-acento-texto">
                 {rotulo}
               </span>
               <p className="mt-3 text-sm text-texto-suave">{texto}</p>
@@ -99,7 +99,7 @@ export default function SobrePage() {
               ] as const
             ).map(([dt, dd]) => (
               <div key={dt} className="bg-superficie p-5">
-                <dt className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-roxo-realce">
+                <dt className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-acento-texto">
                   {dt}
                 </dt>
                 <dd className="mt-2 text-sm text-texto">{dd}</dd>

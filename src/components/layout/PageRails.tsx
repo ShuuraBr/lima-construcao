@@ -19,8 +19,8 @@ export function PageRails() {
         className="absolute right-10 top-24 bottom-10 w-px opacity-[0.2]"
         style={{ backgroundImage: linha }}
       />
-      <span className="absolute left-10 top-24 h-2 w-2 -translate-x-[3px] rotate-45 bg-roxo-realce" />
-      <span className="absolute right-10 top-24 h-2 w-2 translate-x-[3px] rotate-45 bg-roxo-realce" />
+      <span className="absolute left-10 top-24 h-2 w-2 -translate-x-[3px] rotate-45 bg-acento-texto" />
+      <span className="absolute right-10 top-24 h-2 w-2 translate-x-[3px] rotate-45 bg-acento-texto" />
     </div>
   );
 }

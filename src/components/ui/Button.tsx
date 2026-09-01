@@ -9,9 +9,10 @@ const base =
 const variantes: Record<Variante, string> = {
   primary: "bg-roxo text-branco hover:bg-roxo-realce",
   ghost:
-    "border border-borda-forte text-texto-forte hover:border-branco hover:text-branco",
+    "border border-borda-forte text-texto-forte hover:border-acento-texto hover:text-acento-texto",
+  // usada apenas sobre faixas escuras (.on-dark) — tokens já resolvem p/ claro sobre escuro
   "ghost-claro":
-    "border border-[rgba(201,201,201,0.4)] text-prata hover:border-branco hover:text-branco",
+    "border border-borda-forte text-texto hover:border-texto-forte hover:text-texto-forte",
 };
 
 export function ButtonLink({

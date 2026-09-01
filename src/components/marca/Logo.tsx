@@ -14,7 +14,7 @@ type LogoProps = {
 export function Logo({ comDescritor = true, className }: LogoProps) {
   return (
     <span className={`flex items-center gap-3 ${className ?? ""}`}>
-      <Simbolo className="h-8 w-auto shrink-0 text-branco" />
+      <Simbolo className="h-8 w-auto shrink-0 text-logo" />
       <span className="flex flex-col leading-none">
         <span className="font-display text-[1.05rem] font-black tracking-[0.16em] text-texto-forte">
           LIMA

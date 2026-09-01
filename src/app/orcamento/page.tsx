@@ -18,9 +18,9 @@ export default async function OrcamentoPage({ searchParams }: Props) {
   const { servico } = await searchParams;
 
   return (
-    <section className="border-b border-borda bg-preto py-16 sm:py-20">
+    <section className="border-b border-borda bg-fundo py-16 sm:py-20">
       <Container className="grid gap-0 border border-borda md:grid-cols-[0.85fr_1.15fr]">
-        <aside className="bg-roxo-profundo p-8">
+        <aside className="on-dark bg-roxo-profundo p-8">
           <Eyebrow>Solicitação de orçamento</Eyebrow>
           <h1 className="mt-4 text-3xl font-extrabold text-branco">
             Descreva a obra. A cotação é feita pela equipe.
@@ -37,14 +37,14 @@ export default async function OrcamentoPage({ searchParams }: Props) {
               "Visita técnica sob agendamento",
             ].map((item) => (
               <li key={item} className="flex gap-2.5">
-                <span className="text-roxo-realce">—</span>
+                <span className="text-acento-texto">—</span>
                 {item}
               </li>
             ))}
           </ul>
         </aside>
 
-        <div className="bg-preto">
+        <div className="bg-fundo">
           <QuoteForm servicoInicial={servico} />
         </div>
       </Container>

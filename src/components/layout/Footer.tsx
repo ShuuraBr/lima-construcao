@@ -7,10 +7,10 @@ const ano = new Date().getFullYear();
 
 export function Footer() {
   return (
-    <footer className="border-t border-borda bg-preto pt-16 pb-10">
+    <footer className="on-dark border-t border-borda bg-preto pt-16 pb-10">
       <Container className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
         <div>
-          <Simbolo className="h-12 w-auto text-branco" />
+          <Simbolo className="h-12 w-auto text-logo" />
           <p className="mt-4 font-display text-lg font-black tracking-[0.16em] text-branco">
             LIMA
           </p>

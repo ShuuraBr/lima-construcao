@@ -33,7 +33,7 @@ export default async function ServicoPage({ params }: Params) {
 
   return (
     <>
-      <Section className="border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda bg-preto">
         <Eyebrow>Serviço {String(indice + 1).padStart(2, "0")}</Eyebrow>
         <h1 className="mt-4 max-w-[16ch] text-4xl font-black text-branco sm:text-5xl">
           {servico.nome}
@@ -41,7 +41,7 @@ export default async function ServicoPage({ params }: Params) {
         <p className="mt-5 max-w-[52ch] text-lg text-prata">
           {servico.descricao}
         </p>
-        <p className="mt-6 inline-block border border-borda px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-roxo-realce">
+        <p className="mt-6 inline-block border border-borda px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-acento-texto">
           {servico.spec}
         </p>
         <div className="mt-9">

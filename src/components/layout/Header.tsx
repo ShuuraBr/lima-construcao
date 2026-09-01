@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/marca/Logo";
 import { Container } from "@/components/ui/Container";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { nav } from "@/lib/site";
 
 export function Header() {
@@ -20,8 +21,8 @@ export function Header() {
   }, [aberto]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-borda bg-preto/85 backdrop-blur-md">
-      <Container className="flex min-h-16 items-center gap-6">
+    <header className="sticky top-0 z-50 border-b border-borda bg-fundo/80 backdrop-blur-md">
+      <Container className="flex min-h-16 items-center gap-4">
         <Link
           href="/"
           onClick={fechar}
@@ -38,8 +39,8 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 aria-current={ativo ? "page" : undefined}
-                className={`px-3 py-2 font-mono text-[0.7rem] uppercase tracking-[0.11em] transition-colors hover:text-roxo-realce ${
-                  ativo ? "text-roxo-realce" : "text-texto-suave"
+                className={`px-3 py-2 font-mono text-[0.7rem] uppercase tracking-[0.11em] transition-colors hover:text-acento-texto ${
+                  ativo ? "text-acento-texto" : "text-texto-suave"
                 }`}
               >
                 {item.label}
@@ -48,39 +49,45 @@ export function Header() {
           })}
           <Link
             href="/orcamento"
-            className="ml-3 bg-roxo px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-branco transition-colors hover:bg-roxo-realce"
+            className="ml-2 bg-roxo px-4 py-2.5 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-branco transition-colors hover:bg-roxo-realce"
           >
             Solicitar orçamento
           </Link>
+          <ThemeToggle className="ml-2" />
         </nav>
 
-        <button
-          type="button"
-          onClick={() => setAberto((v) => !v)}
-          aria-expanded={aberto}
-          aria-controls="menu-mobile"
-          className="ml-auto flex h-10 w-10 items-center justify-center border border-borda text-texto-forte md:hidden"
-        >
-          <span className="sr-only">{aberto ? "Fechar menu" : "Abrir menu"}</span>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
+        <div className="ml-auto flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setAberto((v) => !v)}
+            aria-expanded={aberto}
+            aria-controls="menu-mobile"
+            className="flex h-9 w-9 items-center justify-center border border-borda text-texto-forte"
           >
-            {aberto ? (
-              <path d="M3 3l12 12M15 3L3 15" />
-            ) : (
-              <path d="M2 4h14M2 9h14M2 14h14" />
-            )}
-          </svg>
-        </button>
+            <span className="sr-only">
+              {aberto ? "Fechar menu" : "Abrir menu"}
+            </span>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              {aberto ? (
+                <path d="M3 3l12 12M15 3L3 15" />
+              ) : (
+                <path d="M2 4h14M2 9h14M2 14h14" />
+              )}
+            </svg>
+          </button>
+        </div>
       </Container>
 
       {aberto && (
-        <div id="menu-mobile" className="border-t border-borda bg-preto md:hidden">
+        <div id="menu-mobile" className="border-t border-borda bg-fundo md:hidden">
           <Container className="flex flex-col py-4">
             {nav.map((item) => (
               <Link

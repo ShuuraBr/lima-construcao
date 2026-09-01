@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PageRails } from "@/components/layout/PageRails";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { site } from "@/lib/site";
 
 const montserrat = Montserrat({
@@ -62,8 +63,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f0f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
@@ -72,21 +76,24 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${montserrat.variable} ${inter.variable} ${jetbrains.variable}`}
     >
       <body className="flex min-h-dvh flex-col antialiased">
-        <a
-          href="#conteudo"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-roxo focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:uppercase focus:text-branco"
-        >
-          Pular para o conteúdo
-        </a>
-        <PageRails />
-        <Header />
-        <main id="conteudo" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider>
+          <a
+            href="#conteudo"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-roxo focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:uppercase focus:text-branco"
+          >
+            Pular para o conteúdo
+          </a>
+          <PageRails />
+          <Header />
+          <main id="conteudo" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

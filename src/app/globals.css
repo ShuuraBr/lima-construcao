@@ -3,12 +3,17 @@
 /* ============================================================
    Lima Construção e Instalação — Design System
    Paleta e tipografia medidas no Manual de Identidade v2.0.
-   Site institucional: tema escuro único (preto é a base de
-   ~90% das aplicações da marca).
+
+   Três temas: claro (padrão), escuro e automático (segue o SO).
+   O preto é a assinatura da marca — no tema claro ele reaparece
+   nas faixas de destaque (hero, faixa de números, CTA, rodapé),
+   marcadas com a classe `.on-dark`.
    ============================================================ */
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
-  /* Paleta oficial */
+  /* Paleta oficial — fixa, não muda com o tema */
   --color-preto: #000000;
   --color-roxo: #7f205a;
   --color-roxo-profundo: #3d0029;
@@ -18,34 +23,113 @@
   --color-cinza-claro: #f2f2f2;
   --color-branco: #ffffff;
 
-  /* Papéis semânticos (superfícies e texto no tema escuro) */
-  --color-fundo: #000000;
-  --color-fundo-elevado: #0e0a0c;
-  --color-superficie: #100b0e;
-  --color-superficie-2: #181117;
-  --color-borda: rgba(201, 201, 201, 0.14);
-  --color-borda-forte: rgba(201, 201, 201, 0.28);
-  --color-texto: #c9c9c9;
-  --color-texto-forte: #ffffff;
-  --color-texto-suave: #8b8388;
-
   /* Tipografia — pilha de fallback obrigatória do manual */
   --font-display: var(--font-montserrat), Arial, sans-serif;
   --font-sans: var(--font-inter), Calibri, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, Consolas, monospace;
 
-  /* Layout */
+  /* Layout / motion */
   --spacing-chanfro: 0.875rem;
-
-  /* Motion */
   --ease-estrutural: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@layer base {
-  :root {
+/* Tokens semânticos: as utilitárias (bg-fundo, text-texto-forte…) apontam
+   para variáveis que mudam por tema. */
+@theme inline {
+  --color-fundo: var(--c-fundo);
+  --color-fundo-elevado: var(--c-fundo-elevado);
+  --color-superficie: var(--c-superficie);
+  --color-superficie-2: var(--c-superficie-2);
+  --color-borda: var(--c-borda);
+  --color-borda-forte: var(--c-borda-forte);
+  --color-texto: var(--c-texto);
+  --color-texto-forte: var(--c-texto-forte);
+  --color-texto-suave: var(--c-texto-suave);
+  --color-acento-texto: var(--c-acento-texto);
+  --color-logo: var(--c-logo);
+}
+
+/* ---------- TEMA CLARO (padrão) ---------- */
+:root {
+  --c-fundo: #f3f0f2;
+  --c-fundo-elevado: #ffffff;
+  --c-superficie: #ffffff;
+  --c-superficie-2: #f7f3f6;
+  --c-borda: rgba(43, 43, 43, 0.14);
+  --c-borda-forte: rgba(43, 43, 43, 0.32);
+  --c-texto: #3d363b;
+  --c-texto-forte: #141013;
+  --c-texto-suave: #6c646a;
+  --c-acento-texto: #7a1f56;
+  --c-logo: #7f205a;
+
+  --c-linha: rgba(43, 43, 43, 0.055);
+  --c-vinheta: rgba(127, 32, 90, 0.06);
+
+  color-scheme: light;
+}
+
+/* ---------- TEMA ESCURO ---------- */
+/* valores de fundo escuro, reaproveitados também em `.on-dark` */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --c-fundo: #000000;
+    --c-fundo-elevado: #0e0a0c;
+    --c-superficie: #100b0e;
+    --c-superficie-2: #181117;
+    --c-borda: rgba(201, 201, 201, 0.14);
+    --c-borda-forte: rgba(201, 201, 201, 0.3);
+    --c-texto: #c9c9c9;
+    --c-texto-forte: #ffffff;
+    --c-texto-suave: #8b8388;
+    --c-acento-texto: #c56ba0;
+    --c-logo: #ffffff;
+
+    --c-linha: rgba(201, 201, 201, 0.07);
+    --c-vinheta: rgba(127, 32, 90, 0.14);
+
     color-scheme: dark;
   }
+}
 
+[data-theme="dark"] {
+  --c-fundo: #000000;
+  --c-fundo-elevado: #0e0a0c;
+  --c-superficie: #100b0e;
+  --c-superficie-2: #181117;
+  --c-borda: rgba(201, 201, 201, 0.14);
+  --c-borda-forte: rgba(201, 201, 201, 0.3);
+  --c-texto: #c9c9c9;
+  --c-texto-forte: #ffffff;
+  --c-texto-suave: #8b8388;
+  --c-acento-texto: #c56ba0;
+  --c-logo: #ffffff;
+
+  --c-linha: rgba(201, 201, 201, 0.07);
+  --c-vinheta: rgba(127, 32, 90, 0.14);
+
+  color-scheme: dark;
+}
+
+/* ---------- FAIXAS DE DESTAQUE (sempre escuras) ---------- */
+/* Redefine os tokens localmente, então eyebrows, textos e cards aninhados
+   ficam corretos sobre preto mesmo no tema claro. */
+.on-dark {
+  --c-fundo: #000000;
+  --c-fundo-elevado: #0e0a0c;
+  --c-superficie: #14090f;
+  --c-superficie-2: #1c1119;
+  --c-borda: rgba(201, 201, 201, 0.16);
+  --c-borda-forte: rgba(201, 201, 201, 0.32);
+  --c-texto: #c9c9c9;
+  --c-texto-forte: #ffffff;
+  --c-texto-suave: #9a9298;
+  --c-acento-texto: #c56ba0;
+  --c-logo: #ffffff;
+  color-scheme: dark;
+}
+
+@layer base {
   * {
     border-color: var(--color-borda);
   }
@@ -55,15 +139,15 @@
   }
 
   body {
-    /* Malha construtiva do manual (módulo derivado do símbolo) como textura de
-       fundo — evita laterais mortas em telas largas sem competir com o conteúdo. */
+    /* Malha construtiva do manual como textura de fundo — evita laterais
+       mortas em telas largas sem competir com o conteúdo. */
     background-color: var(--color-fundo);
     background-image:
-      radial-gradient(120% 70% at 50% -10%, rgba(127, 32, 90, 0.14), transparent 55%),
+      radial-gradient(120% 70% at 50% -10%, var(--c-vinheta), transparent 55%),
       repeating-linear-gradient(
         90deg,
-        rgba(201, 201, 201, 0.07) 0,
-        rgba(201, 201, 201, 0.07) 1px,
+        var(--c-linha) 0,
+        var(--c-linha) 1px,
         transparent 1px,
         transparent 96px
       );
@@ -73,6 +157,7 @@
     line-height: 1.62;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1,
@@ -92,7 +177,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-roxo-realce);
+    outline: 2px solid var(--color-acento-texto);
     outline-offset: 3px;
   }
 
@@ -134,18 +219,6 @@
       var(--spacing-chanfro) 100%,
       0 calc(100% - var(--spacing-chanfro))
     );
-  }
-
-  /* Linha estrutural — filete técnico de 1px */
-  .linha-estrutural {
-    background-image: linear-gradient(
-      90deg,
-      var(--color-roxo) 0,
-      var(--color-roxo) 26px,
-      var(--color-borda) 26px,
-      var(--color-borda) 100%
-    );
-    height: 1px;
   }
 }
 

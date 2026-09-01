@@ -37,7 +37,7 @@ function Campo({
         </span>
       )}
       {erro && (
-        <span className="mt-1.5 font-mono text-[0.62rem] tracking-[0.02em] text-roxo-realce">
+        <span className="mt-1.5 font-mono text-[0.62rem] tracking-[0.02em] text-acento-texto">
           {erro}
         </span>
       )}
@@ -46,7 +46,7 @@ function Campo({
 }
 
 const inputCls =
-  "w-full border border-borda bg-superficie-2 px-3 py-2.5 text-[0.92rem] text-texto outline-none focus:border-transparent focus:outline-2 focus:outline-roxo-realce";
+  "w-full border border-borda bg-superficie-2 px-3 py-2.5 text-[0.92rem] text-texto outline-none focus:border-transparent focus:outline-2 focus:outline-acento-texto";
 
 export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
   const [estado, formAction, pendente] = useActionState(
@@ -63,13 +63,13 @@ export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
 
   if (estado.status === "sucesso") {
     return (
-      <div className="border border-roxo-realce bg-superficie p-8">
-        <p className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-roxo-realce">
+      <div className="border border-acento-texto bg-superficie p-8">
+        <p className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-acento-texto">
           Solicitação registrada
         </p>
         <p className="mt-3 text-lg text-texto-forte">
           Protocolo{" "}
-          <span className="font-mono text-roxo-realce">{estado.protocolo}</span>.
+          <span className="font-mono text-acento-texto">{estado.protocolo}</span>.
         </p>
         <p className="mt-2 max-w-[46ch] text-sm text-texto-suave">
           O pedido entrou na fila da equipe da Lima. Um engenheiro analisa
@@ -204,7 +204,7 @@ export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
           name="dataInicio"
           type="date"
           defaultValue={v.dataInicio}
-          className={`${inputCls} [color-scheme:dark]`}
+          className={inputCls}
         />
       </Campo>
 
@@ -241,7 +241,7 @@ export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
       {estado.status === "erro" && estado.mensagem && (
         <p
           role="alert"
-          className="md:col-span-2 border border-roxo-realce bg-roxo-profundo/40 px-4 py-3 font-mono text-[0.7rem] tracking-[0.02em] text-roxo-realce"
+          className="md:col-span-2 border border-acento-texto/60 bg-acento-texto/10 px-4 py-3 font-mono text-[0.7rem] tracking-[0.02em] text-acento-texto"
         >
           {estado.mensagem}
         </p>

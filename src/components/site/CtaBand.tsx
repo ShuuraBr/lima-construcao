@@ -9,7 +9,7 @@ export function CtaBand({
   texto?: string;
 }) {
   return (
-    <section className="border-y border-borda bg-roxo-profundo">
+    <section className="on-dark border-y border-borda bg-roxo-profundo">
       <Container className="flex flex-col gap-6 py-14 sm:flex-row sm:items-center sm:justify-between">
         <div className="max-w-[46ch]">
           <h2 className="text-2xl font-extrabold text-branco sm:text-3xl">

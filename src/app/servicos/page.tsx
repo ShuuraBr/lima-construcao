@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function ServicosPage() {
   return (
     <>
-      <Section className="border-b border-borda bg-preto">
+      <Section className="on-dark border-b border-borda bg-preto">
         <SectionHeader
           eyebrow="Serviços"
           titulo="Seis frentes, executadas pela mesma equipe."

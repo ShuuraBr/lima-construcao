@@ -50,8 +50,8 @@ export function SectionHeader({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.22em] text-roxo-realce">
-      <span aria-hidden className="h-px w-6 bg-roxo-realce" />
+    <span className="flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.22em] text-acento-texto">
+      <span aria-hidden className="h-px w-6 bg-acento-texto" />
       {children}
     </span>
   );

@@ -25,7 +25,7 @@ export function ServiceCard({
         {servico.nome}
       </h3>
       <p className="mt-2 text-sm text-texto-suave">{servico.resumo}</p>
-      <span className="mt-4 block font-mono text-[0.68rem] uppercase tracking-[0.06em] text-roxo-realce">
+      <span className="mt-4 block font-mono text-[0.68rem] uppercase tracking-[0.06em] text-acento-texto">
         {servico.spec}
       </span>
     </Link>
