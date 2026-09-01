@@ -16,6 +16,11 @@
 # next.js
 /.next/
 /out/
+# arquivos temporários que o Next gera ao transpilar um next.config.ts
+*.next.config.ts
+*.next.config.js
+*.next.config.mjs
+next.config.compiled.js
 
 # production
 /build
