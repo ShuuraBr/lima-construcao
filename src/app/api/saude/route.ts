@@ -27,6 +27,11 @@ export async function GET(req: NextRequest) {
       ms: Date.now() - inicio,
       env: {
         DATABASE_URL: Boolean(process.env.DATABASE_URL),
+        DB_HOST: process.env.DB_HOST ?? null,
+        DB_PORT: process.env.DB_PORT ?? null,
+        DB_NAME: process.env.DB_NAME ?? null,
+        DB_USER: Boolean(process.env.DB_USER || process.env.DB_NAME),
+        DB_PASS: Boolean(process.env.DB_PASS),
         AUTH_SECRET: Boolean(process.env.AUTH_SECRET),
         NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? null,
       },

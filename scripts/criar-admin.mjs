@@ -8,7 +8,21 @@
 import { createHash, randomBytes } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+function urlDoBanco() {
+  const host = process.env.DB_HOST?.trim();
+  if (host) {
+    const name = (process.env.DB_NAME ?? "").trim();
+    const user = encodeURIComponent(
+      (process.env.DB_USER ?? process.env.DB_NAME ?? "").trim(),
+    );
+    const pass = encodeURIComponent(process.env.DB_PASS ?? "");
+    const port = (process.env.DB_PORT ?? "3306").trim();
+    return `mysql://${user}:${pass}@${host}:${port}/${name}`;
+  }
+  return process.env.DATABASE_URL;
+}
+
+const prisma = new PrismaClient({ datasourceUrl: urlDoBanco() });
 
 const [email, nome, cargo] = process.argv.slice(2);
 if (!email || !nome) {
