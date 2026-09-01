@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Lima Construção e Instalação — Design System
+   Paleta e tipografia medidas no Manual de Identidade v2.0.
+   Site institucional: tema escuro único (preto é a base de
+   ~90% das aplicações da marca).
+   ============================================================ */
+
+@theme {
+  /* Paleta oficial */
+  --color-preto: #000000;
+  --color-roxo: #7f205a;
+  --color-roxo-profundo: #3d0029;
+  --color-roxo-realce: #b5548c;
+  --color-prata: #c9c9c9;
+  --color-cinza-chumbo: #2b2b2b;
+  --color-cinza-claro: #f2f2f2;
+  --color-branco: #ffffff;
+
+  /* Papéis semânticos (superfícies e texto no tema escuro) */
+  --color-fundo: #000000;
+  --color-fundo-elevado: #0e0a0c;
+  --color-superficie: #100b0e;
+  --color-superficie-2: #181117;
+  --color-borda: rgba(201, 201, 201, 0.14);
+  --color-borda-forte: rgba(201, 201, 201, 0.28);
+  --color-texto: #c9c9c9;
+  --color-texto-forte: #ffffff;
+  --color-texto-suave: #8b8388;
+
+  /* Tipografia — pilha de fallback obrigatória do manual */
+  --font-display: var(--font-montserrat), Arial, sans-serif;
+  --font-sans: var(--font-inter), Calibri, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, Consolas, monospace;
+
+  /* Layout */
+  --spacing-chanfro: 0.875rem;
+
+  /* Motion */
+  --ease-estrutural: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--color-borda);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-fundo);
+    color: var(--color-texto);
+    font-family: var(--font-sans);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-texto-forte);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-roxo);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-roxo-realce);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Corte diagonal / blocos facetados — chanfro em dois cantos opostos,
+     mesmo vocabulário do símbolo (nunca cantos arredondados). */
+  .facet {
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--spacing-chanfro)) 0,
+      100% var(--spacing-chanfro),
+      100% 100%,
+      var(--spacing-chanfro) 100%,
+      0 calc(100% - var(--spacing-chanfro))
+    );
+  }
+
+  .facet-sm {
+    --spacing-chanfro: 0.5rem;
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--spacing-chanfro)) 0,
+      100% var(--spacing-chanfro),
+      100% 100%,
+      var(--spacing-chanfro) 100%,
+      0 calc(100% - var(--spacing-chanfro))
+    );
+  }
+
+  /* Linha estrutural — filete técnico de 1px */
+  .linha-estrutural {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-roxo) 0,
+      var(--color-roxo) 26px,
+      var(--color-borda) 26px,
+      var(--color-borda) 100%
+    );
+    height: 1px;
+  }
+}
+
+/* Rótulos técnicos em mono (prazos, medidas, códigos) */
+.tecnico {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}

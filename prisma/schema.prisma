@@ -1,0 +1,63 @@
+// Lima Construção e Instalação — modelo de dados
+// Etapa 1: apenas o formulário de orçamento do site institucional.
+// O painel administrativo (contratos, prestação de serviço, agenda, usuários)
+// entra em etapas seguintes e será adicionado a este mesmo schema.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServicoTipo {
+  DRYWALL
+  STEEL_FRAME
+  ELETRICA
+  HIDRAULICA
+  FORRO
+  ACABAMENTO
+  ALVENARIA
+  MAIS_DE_UMA_FRENTE
+}
+
+enum OrcamentoStatus {
+  NOVO
+  EM_ANALISE
+  COTACAO_ENVIADA
+  APROVADO
+  RECUSADO
+}
+
+/// Pedido de orçamento recebido pelo formulário público do site.
+model PedidoOrcamento {
+  id            String          @id @default(cuid())
+  protocolo     String          @unique
+  status        OrcamentoStatus @default(NOVO)
+
+  // Contato de quem solicita
+  nome          String
+  empresa       String?
+  email         String
+  telefone      String
+
+  // Dados da obra
+  servico       ServicoTipo
+  enderecoObra  String    @map("endereco_obra")
+  metragemM2    Int?      @map("metragem_m2")
+  prazoDesejado String?   @map("prazo_desejado")
+  dataInicio    DateTime? @map("data_inicio")
+  mensagem      String?
+  anexoNome     String?   @map("anexo_nome")
+
+  // Metadados
+  origem       String   @default("site")
+  ipHash       String?  @map("ip_hash")
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  @@index([status, criadoEm])
+  @@map("pedidos_orcamento")
+}
