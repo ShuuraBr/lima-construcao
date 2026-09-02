@@ -102,6 +102,8 @@ export function MapaObras({ obras }: { obras: ObraNoMapa[] }) {
                 <span style="opacity:.7">${o.enderecoObra}</span><br/>
                 ${o.progresso}% · ${fmtBRL(o.valor)}<br/>
                 <a href="/painel/contratos/${o.id}">abrir contrato &rarr;</a>
+                &nbsp;·&nbsp;
+                <a href="https://www.google.com/maps/search/?api=1&query=${o.latitude},${o.longitude}" target="_blank" rel="noopener">Google Maps</a>
               </div>`,
             );
         });

@@ -13,6 +13,7 @@ import {
 import { StatusPill } from "@/components/painel/StatusPill";
 import { StatusContratoForm } from "./StatusContratoForm";
 import { ApontamentoForm } from "./ApontamentoForm";
+import { CompartilharLocal } from "@/components/painel/CompartilharLocal";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -127,6 +128,22 @@ export default async function ContratoDetalhe({ params }: Props) {
             </div>
           ))}
         </dl>
+
+        {c.latitude != null && c.longitude != null && (
+          <div className="border-t border-borda px-4 py-3">
+            <dt className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-texto-suave">
+              Enviar localização
+            </dt>
+            <div className="mt-2">
+              <CompartilharLocal
+                latitude={c.latitude}
+                longitude={c.longitude}
+                titulo={`Obra ${c.numero} — ${c.clienteNome}`}
+                endereco={c.enderecoObra}
+              />
+            </div>
+          </div>
+        )}
 
         {c.observacoes && (
           <div className="border-t border-borda px-4 py-3">
