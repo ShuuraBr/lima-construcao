@@ -15,17 +15,27 @@ export default async function PainelHome() {
   const sessao = await exigirSessao();
   const seteDias = diasAtras(7);
 
-  const [porStatus, novos7, total, recentes, contratosPorStatus] =
-    await Promise.all([
-      prisma.pedidoOrcamento.groupBy({ by: ["status"], _count: true }),
-      prisma.pedidoOrcamento.count({ where: { criadoEm: { gte: seteDias } } }),
-      prisma.pedidoOrcamento.count(),
-      prisma.pedidoOrcamento.findMany({
-        orderBy: { criadoEm: "desc" },
-        take: 6,
-      }),
-      prisma.contrato.groupBy({ by: ["status"], _count: true }),
-    ]);
+  const [
+    porStatus,
+    novos7,
+    total,
+    recentes,
+    contratosPorStatus,
+    visitasPorStatus,
+  ] = await Promise.all([
+    prisma.pedidoOrcamento.groupBy({ by: ["status"], _count: true }),
+    prisma.pedidoOrcamento.count({ where: { criadoEm: { gte: seteDias } } }),
+    prisma.pedidoOrcamento.count(),
+    prisma.pedidoOrcamento.findMany({
+      orderBy: { criadoEm: "desc" },
+      take: 6,
+    }),
+    prisma.contrato.groupBy({ by: ["status"], _count: true }),
+    prisma.visita.groupBy({ by: ["status"], _count: true }),
+  ]);
+
+  const contarVisita = (s: string) =>
+    visitasPorStatus.find((r) => r.status === s)?._count ?? 0;
 
   const contarContrato = (s: string) =>
     contratosPorStatus.find((r) => r.status === s)?._count ?? 0;
@@ -99,6 +109,39 @@ export default async function PainelHome() {
         </div>
         <div className="grid grid-cols-2 gap-px border border-borda bg-borda lg:grid-cols-4">
           {contratosKpis.map((kpi) => (
+            <div key={kpi.k} className="bg-superficie p-4">
+              <div className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-texto-suave">
+                {kpi.k}
+              </div>
+              <div className="mt-2 font-mono text-[1.8rem] tabular-nums text-texto-forte">
+                {String(kpi.n).padStart(2, "0")}
+              </div>
+              <div className="mt-1 font-mono text-[0.6rem] tracking-[0.02em] text-acento-texto">
+                {kpi.d}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-texto-suave">
+            Agenda de visitas
+          </p>
+          <Link
+            href="/painel/visitas"
+            className="font-mono text-[0.6rem] uppercase tracking-[0.08em] text-acento-texto hover:underline"
+          >
+            Ver todas
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-px border border-borda bg-borda">
+          {[
+            { k: "A confirmar", n: contarVisita("SOLICITADA"), d: "aguardando o Erick" },
+            { k: "Confirmadas", n: contarVisita("CONFIRMADA"), d: "data marcada" },
+            { k: "Realizadas", n: contarVisita("REALIZADA"), d: "concluídas" },
+          ].map((kpi) => (
             <div key={kpi.k} className="bg-superficie p-4">
               <div className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-texto-suave">
                 {kpi.k}

@@ -40,8 +40,11 @@ export default function ContatoPage() {
           titulo="Falar com o engenheiro responsável."
           texto="Para pedidos de orçamento, use o formulário — o pedido entra organizado no painel da equipe. Para as demais conversas, os canais diretos estão abaixo."
         />
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink href="/orcamento">Solicitar orçamento</ButtonLink>
+          <ButtonLink href="/visita" variante="ghost-claro">
+            Agendar visita técnica
+          </ButtonLink>
         </div>
       </Section>
 

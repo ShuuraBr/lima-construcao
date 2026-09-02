@@ -11,10 +11,11 @@ const ativos = [
   { href: "/painel/orcamentos", label: "Orçamentos" },
   { href: "/painel/contratos", label: "Contratos" },
   { href: "/painel/prestacao-servicos", label: "Prestação de serviços" },
+  { href: "/painel/visitas", label: "Agenda de visitas" },
   { href: "/painel/usuarios", label: "Usuários" },
 ];
 
-const emBreve = ["Agenda de visitas", "Mapa de obras"];
+const emBreve = ["Mapa de obras"];
 
 export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
   const pathname = usePathname();

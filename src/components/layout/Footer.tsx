@@ -41,6 +41,14 @@ export function Footer() {
                 Solicitar orçamento
               </Link>
             </li>
+            <li>
+              <Link
+                href="/visita"
+                className="block py-1 text-sm text-prata hover:text-branco"
+              >
+                Agendar visita
+              </Link>
+            </li>
           </ul>
         </nav>
 

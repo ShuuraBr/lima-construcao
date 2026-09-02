@@ -66,6 +66,27 @@ export const contratoStatusMeta: Record<
   CANCELADO: { label: "Cancelado", tom: "recusado" },
 };
 
+// ---------- status da visita ----------
+
+export const VISITA_STATUS = [
+  "SOLICITADA",
+  "CONFIRMADA",
+  "REALIZADA",
+  "CANCELADA",
+] as const;
+
+export type VisitaStatusT = (typeof VISITA_STATUS)[number];
+
+export const visitaStatusMeta: Record<
+  VisitaStatusT,
+  { label: string; tom: "novo" | "andamento" | "ok" | "recusado" }
+> = {
+  SOLICITADA: { label: "Solicitada", tom: "novo" },
+  CONFIRMADA: { label: "Confirmada", tom: "andamento" },
+  REALIZADA: { label: "Realizada", tom: "ok" },
+  CANCELADA: { label: "Cancelada", tom: "recusado" },
+};
+
 // ---------- formatadores ----------
 
 const dtCurto = new Intl.DateTimeFormat("pt-BR", {
@@ -91,6 +112,14 @@ export const fmtDataHora = (d: Date) => dtLongo.format(d);
 /** Date → "yyyy-MM-dd" para preencher <input type="date">. */
 export const toDateInput = (d: Date | null | undefined) =>
   d ? new Date(d).toISOString().slice(0, 10) : "";
+
+/** Date → "yyyy-MM-ddTHH:mm" (hora local) para <input type="datetime-local">. */
+export const toDateTimeInput = (d: Date | null | undefined) => {
+  if (!d) return "";
+  const x = new Date(d);
+  const off = x.getTimezoneOffset() * 60000;
+  return new Date(x.getTime() - off).toISOString().slice(0, 16);
+};
 export const fmtM2 = (n: number | null | undefined) =>
   n ? `${n.toLocaleString("pt-BR")} m²` : "—";
 export const fmtBRL = (n: number) => brl.format(n);

@@ -152,6 +152,47 @@ model Contrato {
   @@map("contratos")
 }
 
+enum VisitaStatus {
+  SOLICITADA
+  CONFIRMADA
+  REALIZADA
+  CANCELADA
+}
+
+/// Solicitação de visita técnica. Origem: formulário do site ou cadastro manual
+/// no painel. O Erick confirma manualmente data e hora — não há autoagendamento.
+model Visita {
+  id     String       @id @default(cuid())
+  status VisitaStatus @default(SOLICITADA)
+
+  // Contato de quem solicita
+  nome     String
+  empresa  String?
+  email    String?
+  telefone String?
+
+  endereco   String  @db.VarChar(255)
+  preferencia String? @db.Text // preferência de data/horário informada pelo solicitante
+  mensagem   String? @db.Text
+
+  // Preenchido pelo Erick ao confirmar
+  agendadaEm          DateTime? @map("agendada_em")
+  observacoesInternas String?   @map("observacoes_internas") @db.Text
+
+  // Vínculos opcionais (informativos)
+  contratoId        String? @map("contrato_id")
+  pedidoOrcamentoId String? @map("pedido_orcamento_id")
+
+  origem       String   @default("site")
+  ipHash       String?  @map("ip_hash")
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @updatedAt @map("atualizado_em")
+
+  @@index([status, criadoEm])
+  @@index([agendadaEm])
+  @@map("visitas")
+}
+
 /// Registro de andamento da execução de um contrato (prestação de serviço).
 /// Cada apontamento guarda um retrato do progresso/status naquele momento e
 /// atualiza o contrato correspondente.

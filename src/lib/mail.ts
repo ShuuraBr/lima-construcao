@@ -92,6 +92,47 @@ export async function enviarNotificacaoOrcamento(pedido: PedidoResumo) {
 }
 
 /**
+ * Notifica a equipe da Lima sobre uma nova solicitação de visita técnica.
+ * Sem SMTP, apenas registra no log — a solicitação já fica gravada no banco.
+ */
+export async function enviarNotificacaoVisita(v: {
+  nome: string;
+  empresa?: string | null;
+  email: string;
+  telefone: string;
+  endereco: string;
+  preferencia?: string | null;
+  mensagem?: string | null;
+}) {
+  const assunto = `Nova solicitação de visita — ${v.nome}`;
+  const corpo =
+    `Nova solicitação de visita técnica recebida pelo site.\n\n` +
+    linha("Nome", v.nome) +
+    linha("Empresa", v.empresa) +
+    linha("E-mail", v.email) +
+    linha("Telefone", v.telefone) +
+    linha("Endereço", v.endereco) +
+    linha("Preferência de data/horário", v.preferencia) +
+    (v.mensagem ? `\nMensagem:\n${v.mensagem}\n` : "") +
+    `\n— Confirmar data e hora manualmente no painel.`;
+
+  if (!smtpConfigurado()) {
+    console.info(`[mail] SMTP não configurado — visita de ${v.nome} não enviada.\n${corpo}`);
+    return { enviado: false as const };
+  }
+
+  await getTransporter().sendMail({
+    from: process.env.MAIL_FROM,
+    to: process.env.MAIL_TO,
+    replyTo: v.email,
+    subject: assunto,
+    text: corpo,
+  });
+
+  return { enviado: true as const };
+}
+
+/**
  * Envia o convite de acesso ao painel. Sem SMTP, apenas registra no log — o
  * chamador ainda recebe o link para repassar manualmente.
  */
