@@ -76,14 +76,24 @@ export function EnderecoObraFields({ valores }: { valores?: EnderecoValores }) {
   async function acharCoordenada() {
     setMsg(null);
     setOcupado("geo");
-    const texto = [logradouro, numero, bairro, cidade, uf, cep]
-      .filter(Boolean)
-      .join(", ");
     try {
-      const g = await geocodificar(texto);
+      const g = await geocodificar({
+        logradouro,
+        numero,
+        bairro,
+        cidade,
+        uf,
+        cep,
+      });
       setLat(String(g.latitude));
       setLng(String(g.longitude));
-      setMsg("Localização encontrada. Confira e ajuste o pino se precisar.");
+      const nota: Record<string, string> = {
+        exato: "Localização encontrada. Confira o pino no mapa.",
+        aproximado: "Localização aproximada (rua). Ajuste o pino no mapa.",
+        bairro: "Só foi possível localizar o bairro. Ajuste o pino no mapa.",
+        cidade: "Só foi possível localizar a cidade. Marque o ponto no mapa.",
+      };
+      setMsg(nota[g.precisao]);
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Não foi possível localizar.");
     } finally {
