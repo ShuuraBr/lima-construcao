@@ -5,6 +5,15 @@ import "leaflet/dist/leaflet.css";
 
 const CENTRO_DF: [number, number] = [-15.7942, -47.8822];
 
+// Pino próprio (SVG inline) — evita depender das imagens do Leaflet, que
+// quebram sob o bundler do Next.
+const PINO_SVG = `
+<svg width="30" height="42" viewBox="0 0 30 42" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15 41C15 41 28 25.5 28 15A13 13 0 1 0 2 15C2 25.5 15 41 15 41Z"
+    fill="#7F205A" stroke="#fff" stroke-width="2"/>
+  <circle cx="15" cy="15" r="5" fill="#fff"/>
+</svg>`;
+
 function temaEscuro() {
   if (typeof document === "undefined") return true;
   const t = document.documentElement.dataset.theme;
@@ -58,8 +67,15 @@ export function SeletorLocal({
 
       setTimeout(() => map.invalidateSize(), 120);
 
+      const icone = L.divIcon({
+        html: PINO_SVG,
+        className: "",
+        iconSize: [30, 42],
+        iconAnchor: [15, 41],
+      });
       const marker = L.marker([inicial.lat, inicial.lng], {
         draggable: true,
+        icon: icone,
       });
       if (pos) marker.addTo(map);
 
