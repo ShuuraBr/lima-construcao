@@ -6,6 +6,15 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { exigirSessao } from "@/lib/painel";
 import { VISITA_STATUS } from "@/lib/painel-shared";
+import { comporEndereco } from "@/lib/endereco";
+
+const coordOpc = (min: number, max: number, msg: string) =>
+  z
+    .string()
+    .trim()
+    .transform((v) => v.replace(",", ".").replace(/[^\d.\-]/g, ""))
+    .transform((v) => (v === "" || v === "-" ? null : Number(v)))
+    .refine((v) => v === null || (!Number.isNaN(v) && v >= min && v <= max), msg);
 
 export type EstadoVisitaPainel = {
   erro?: string;
@@ -28,7 +37,15 @@ const visitaSchema = z.object({
     .transform((v) => v || null)
     .refine((v) => !v || z.string().email().safeParse(v).success, "E-mail inválido."),
   telefone: z.string().trim().max(40).transform((v) => v || null),
-  endereco: z.string().trim().min(4, "Informe o endereço da obra."),
+  cep: z.string().trim().max(9).transform((v) => v || null),
+  logradouro: z.string().trim().min(2, "Informe o endereço da obra.").max(180),
+  enderecoNumero: z.string().trim().max(30).transform((v) => v || null),
+  complemento: z.string().trim().max(120).transform((v) => v || null),
+  bairro: z.string().trim().max(120).transform((v) => v || null),
+  cidade: z.string().trim().max(120).transform((v) => v || null),
+  uf: z.string().trim().toUpperCase().max(2).transform((v) => v || null),
+  latitude: coordOpc(-90, 90, "Latitude inválida."),
+  longitude: coordOpc(-180, 180, "Longitude inválida."),
   preferencia: z.string().trim().max(400).transform((v) => v || null),
   mensagem: z.string().trim().max(2000).transform((v) => v || null),
   status: z.enum(VISITA_STATUS),
@@ -45,7 +62,15 @@ function lerForm(formData: FormData) {
     empresa: s("empresa"),
     email: s("email"),
     telefone: s("telefone"),
-    endereco: s("endereco"),
+    cep: s("cep"),
+    logradouro: s("logradouro"),
+    enderecoNumero: s("enderecoNumero"),
+    complemento: s("complemento"),
+    bairro: s("bairro"),
+    cidade: s("cidade"),
+    uf: s("uf"),
+    latitude: s("latitude"),
+    longitude: s("longitude"),
     preferencia: s("preferencia"),
     mensagem: s("mensagem"),
     status: s("status"),
@@ -81,7 +106,7 @@ export async function criarVisitaAction(
   }
 
   const visita = await prisma.visita.create({
-    data: { ...d, origem: "painel" },
+    data: { ...d, endereco: comporEndereco(d), origem: "painel" },
   });
 
   revalidatePath("/painel/visitas");
@@ -105,7 +130,10 @@ export async function atualizarVisitaAction(
     return { erro: "Informe telefone ou e-mail do solicitante.", valores: planificar(bruto) };
   }
 
-  await prisma.visita.update({ where: { id }, data: d });
+  await prisma.visita.update({
+    where: { id },
+    data: { ...d, endereco: comporEndereco(d) },
+  });
 
   revalidatePath(`/painel/visitas/${id}`);
   revalidatePath("/painel/visitas");

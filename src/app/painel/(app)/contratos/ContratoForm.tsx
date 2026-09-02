@@ -13,7 +13,7 @@ import {
   atualizarContratoAction,
   type EstadoContrato,
 } from "./actions";
-import { EnderecoObraFields } from "./EnderecoObraFields";
+import { EnderecoFields } from "@/components/painel/EnderecoFields";
 import {
   aplicarMascara,
   mascaraMoeda,
@@ -135,7 +135,7 @@ export function ContratoForm({
       </Secao>
 
       <Secao titulo="Endereço da obra">
-        <EnderecoObraFields
+        <EnderecoFields
           valores={{
             cep: v("cep"),
             logradouro: v("logradouro"),

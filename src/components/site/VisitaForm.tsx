@@ -3,6 +3,7 @@
 import { useActionState, useId } from "react";
 import { solicitarVisita, type EstadoVisita } from "@/app/(site)/visita/actions";
 import { aplicarMascara, mascaraTelefone } from "@/lib/mascaras";
+import { EnderecoFields } from "@/components/painel/EnderecoFields";
 
 const estadoInicial: EstadoVisita = { status: "idle" };
 
@@ -124,16 +125,26 @@ export function VisitaForm() {
       </Campo>
 
       <div className="md:col-span-2">
-        <Campo label="Endereço da obra" name="endereco" erro={e.endereco}>
-          <input
-            id="endereco"
-            name="endereco"
-            required
-            placeholder="Quadra, lote, setor — cidade"
-            defaultValue={v.endereco}
-            className={inputCls}
-          />
-        </Campo>
+        <span className="mb-1.5 block font-mono text-[0.64rem] uppercase tracking-[0.12em] text-texto-suave">
+          Endereço da obra
+        </span>
+        <EnderecoFields
+          semMapa
+          valores={{
+            cep: v.cep,
+            logradouro: v.logradouro,
+            enderecoNumero: v.enderecoNumero,
+            complemento: v.complemento,
+            bairro: v.bairro,
+            cidade: v.cidade,
+            uf: v.uf,
+          }}
+        />
+        {e.logradouro && (
+          <span className="mt-1.5 block font-mono text-[0.62rem] tracking-[0.02em] text-acento-texto">
+            {e.logradouro}
+          </span>
+        )}
       </div>
 
       <div className="md:col-span-2">

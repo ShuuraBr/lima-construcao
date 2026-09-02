@@ -9,6 +9,7 @@ import {
   visitaStatusMeta,
 } from "@/lib/painel";
 import { StatusPill } from "@/components/painel/StatusPill";
+import { CompartilharLocal } from "@/components/painel/CompartilharLocal";
 import { GestaoVisita } from "./GestaoVisita";
 
 type Props = { params: Promise<{ id: string }> };
@@ -118,6 +119,22 @@ export default async function VisitaDetalhe({ params }: Props) {
             </div>
           ))}
         </dl>
+
+        {v.latitude != null && v.longitude != null && (
+          <div className="border-t border-borda px-4 py-3">
+            <dt className="font-mono text-[0.58rem] uppercase tracking-[0.12em] text-texto-suave">
+              Enviar localização
+            </dt>
+            <div className="mt-2">
+              <CompartilharLocal
+                latitude={v.latitude}
+                longitude={v.longitude}
+                titulo={`Visita — ${v.nome}`}
+                endereco={v.endereco}
+              />
+            </div>
+          </div>
+        )}
 
         {v.mensagem && (
           <div className="border-t border-borda px-4 py-3">

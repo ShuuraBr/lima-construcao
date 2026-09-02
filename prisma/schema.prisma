@@ -182,7 +182,18 @@ model Visita {
   email    String?
   telefone String?
 
-  endereco   String  @db.VarChar(255)
+  // Endereço da obra — estruturado + linha única montada (igual ao contrato).
+  endereco       String  @db.VarChar(255)
+  cep            String? @db.VarChar(9)
+  logradouro     String? @db.VarChar(180)
+  enderecoNumero String? @map("endereco_numero") @db.VarChar(30)
+  complemento    String? @db.VarChar(120)
+  bairro         String? @db.VarChar(120)
+  cidade         String? @db.VarChar(120)
+  uf             String? @db.VarChar(2)
+  latitude       Float?
+  longitude      Float?
+
   preferencia String? @db.Text // preferência de data/horário informada pelo solicitante
   mensagem   String? @db.Text
 

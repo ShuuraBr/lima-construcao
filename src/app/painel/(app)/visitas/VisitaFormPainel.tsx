@@ -9,6 +9,7 @@ import {
   type EstadoVisitaPainel,
 } from "./actions";
 import { aplicarMascara, mascaraTelefone } from "@/lib/mascaras";
+import { EnderecoFields } from "@/components/painel/EnderecoFields";
 
 const inicial: EstadoVisitaPainel = {};
 const campo =
@@ -63,9 +64,23 @@ export function VisitaFormPainel({
         </Campo>
       </div>
 
-      <Campo r="Endereço da obra *">
-        <input name="endereco" required defaultValue={v("endereco")} className={campo} />
-      </Campo>
+      <div className="border-t border-borda pt-3">
+        <p className={`${rot} mb-2`}>Endereço da obra</p>
+        <EnderecoFields
+          valores={{
+            cep: v("cep"),
+            logradouro: v("logradouro"),
+            enderecoNumero: v("enderecoNumero"),
+            complemento: v("complemento"),
+            bairro: v("bairro"),
+            cidade: v("cidade"),
+            uf: v("uf"),
+            latitude: v("latitude"),
+            longitude: v("longitude"),
+          }}
+        />
+      </div>
+
       <Campo r="Preferência de data/horário">
         <input name="preferencia" defaultValue={v("preferencia")} className={campo} />
       </Campo>

@@ -7,6 +7,11 @@ import type { ServicoTipo } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { exigirSessao } from "@/lib/painel";
 import {
+  comporEndereco,
+  dadosEndereco,
+  type PartesEndereco,
+} from "@/lib/endereco";
+import {
   CONTRATO_STATUS,
   SERVICOS_CONTRATO,
 } from "@/lib/painel-shared";
@@ -103,34 +108,8 @@ function lerForm(formData: FormData) {
   };
 }
 
-/** Monta a linha única do endereço a partir das partes. */
-function comporEndereco(d: {
-  logradouro: string;
-  enderecoNumero: string | null;
-  complemento: string | null;
-  bairro: string | null;
-  cidade: string | null;
-  uf: string | null;
-  cep: string | null;
-}) {
-  const rua = [d.logradouro, d.enderecoNumero].filter(Boolean).join(", ");
-  const meio = [rua, d.complemento, d.bairro].filter(Boolean).join(" - ");
-  const cidadeUf = [d.cidade, d.uf].filter(Boolean).join("/");
-  return [meio, cidadeUf, d.cep].filter(Boolean).join(" · ").slice(0, 255);
-}
-
-/** Campos de endereço para gravar no banco. */
-function dadosEndereco(d: Parameters<typeof comporEndereco>[0]) {
-  return {
-    enderecoObra: comporEndereco(d),
-    cep: d.cep,
-    logradouro: d.logradouro,
-    enderecoNumero: d.enderecoNumero,
-    complemento: d.complemento,
-    bairro: d.bairro,
-    cidade: d.cidade,
-    uf: d.uf,
-  };
+function gravarEndereco(d: PartesEndereco) {
+  return { enderecoObra: comporEndereco(d), ...dadosEndereco(d) };
 }
 
 async function gerarNumero() {
@@ -168,7 +147,7 @@ export async function criarContratoAction(
       clienteEmpresa: d.clienteEmpresa,
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
-      ...dadosEndereco(d),
+      ...gravarEndereco(d),
       latitude: d.latitude,
       longitude: d.longitude,
       servicos: d.servicos as string[],
@@ -212,7 +191,7 @@ export async function atualizarContratoAction(
       clienteEmpresa: d.clienteEmpresa,
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
-      ...dadosEndereco(d),
+      ...gravarEndereco(d),
       latitude: d.latitude,
       longitude: d.longitude,
       servicos: d.servicos as string[],

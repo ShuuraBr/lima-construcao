@@ -30,7 +30,18 @@ function Campo({ r, children }: { r: string; children: React.ReactNode }) {
   );
 }
 
-export function EnderecoObraFields({ valores }: { valores?: EnderecoValores }) {
+/**
+ * Bloco de endereço estruturado (CEP + campos) com busca de CEP, geocodificação
+ * pelo endereço e — quando `semMapa` não é passado — um mini-mapa para fixar a
+ * coordenada. Usado no cadastro de contratos e de visitas.
+ */
+export function EnderecoFields({
+  valores,
+  semMapa = false,
+}: {
+  valores?: EnderecoValores;
+  semMapa?: boolean;
+}) {
   const [cep, setCep] = useState(valores?.cep ?? "");
   const [logradouro, setLogradouro] = useState(valores?.logradouro ?? "");
   const [numero, setNumero] = useState(valores?.enderecoNumero ?? "");
@@ -62,9 +73,13 @@ export function EnderecoObraFields({ valores }: { valores?: EnderecoValores }) {
       if (e.latitude && e.longitude) {
         setLat(String(e.latitude));
         setLng(String(e.longitude));
-        setMsg("Endereço e localização aproximada preenchidos. Ajuste o pino.");
+        setMsg(
+          semMapa
+            ? "Endereço e localização aproximada preenchidos."
+            : "Endereço e localização aproximada preenchidos. Ajuste o pino.",
+        );
       } else {
-        setMsg('Endereço preenchido. Use "localizar" ou o mapa para a coordenada.');
+        setMsg("Endereço preenchido.");
       }
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Falha na consulta do CEP.");
@@ -195,13 +210,15 @@ export function EnderecoObraFields({ valores }: { valores?: EnderecoValores }) {
         </p>
       )}
 
-      <SeletorLocal
-        pos={pos}
-        onChange={(la, lo) => {
-          setLat(String(la));
-          setLng(String(lo));
-        }}
-      />
+      {!semMapa && (
+        <SeletorLocal
+          pos={pos}
+          onChange={(la, lo) => {
+            setLat(String(la));
+            setLng(String(lo));
+          }}
+        />
+      )}
 
       {/* valores enviados no formulário */}
       <input type="hidden" name="cep" value={cep} />
