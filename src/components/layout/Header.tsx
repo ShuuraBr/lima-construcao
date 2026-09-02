@@ -31,6 +31,14 @@ export function Header() {
           <Logo />
         </Link>
 
+        <Link
+          href="/painel/entrar"
+          onClick={fechar}
+          className="hidden border border-borda px-2.5 py-1.5 font-mono text-[0.58rem] uppercase tracking-[0.12em] text-texto-suave transition-colors hover:border-acento-texto hover:text-acento-texto sm:inline-block"
+        >
+          Painel
+        </Link>
+
         <nav className="ml-auto hidden items-center gap-1 md:flex">
           {nav.map((item) => {
             const ativo = pathname.startsWith(item.href);
@@ -105,6 +113,13 @@ export function Header() {
               className="mt-4 bg-roxo px-4 py-3.5 text-center font-mono text-[0.72rem] uppercase tracking-[0.1em] text-branco"
             >
               Solicitar orçamento
+            </Link>
+            <Link
+              href="/painel/entrar"
+              onClick={fechar}
+              className="mt-2 border border-borda px-4 py-3 text-center font-mono text-[0.68rem] uppercase tracking-[0.1em] text-texto-suave"
+            >
+              Painel
             </Link>
           </Container>
         </div>
