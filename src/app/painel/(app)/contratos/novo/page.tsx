@@ -29,7 +29,7 @@ export default async function NovoContratoPage({ searchParams }: Props) {
           clienteEmpresa: pedido.empresa ?? "",
           clienteEmail: pedido.email,
           clienteTelefone: pedido.telefone,
-          enderecoObra: pedido.enderecoObra,
+          logradouro: pedido.enderecoObra,
           servicos:
             pedido.servico && pedido.servico !== "MAIS_DE_UMA_FRENTE"
               ? [pedido.servico]

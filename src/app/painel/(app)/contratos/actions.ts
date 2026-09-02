@@ -43,7 +43,13 @@ const contratoSchema = z.object({
     .transform((v) => v || null)
     .refine((v) => !v || z.string().email().safeParse(v).success, "E-mail inválido."),
   clienteTelefone: z.string().trim().max(40).transform((v) => v || null),
-  enderecoObra: z.string().trim().min(4, "Informe o endereço da obra."),
+  cep: z.string().trim().max(9).transform((v) => v || null),
+  logradouro: z.string().trim().min(2, "Informe o logradouro da obra.").max(180),
+  enderecoNumero: z.string().trim().max(30).transform((v) => v || null),
+  complemento: z.string().trim().max(120).transform((v) => v || null),
+  bairro: z.string().trim().max(120).transform((v) => v || null),
+  cidade: z.string().trim().max(120).transform((v) => v || null),
+  uf: z.string().trim().toUpperCase().max(2).transform((v) => v || null),
   latitude: coordOpc(-90, 90, "Latitude inválida."),
   longitude: coordOpc(-180, 180, "Longitude inválida."),
   servicos: z
@@ -75,7 +81,13 @@ function lerForm(formData: FormData) {
     clienteEmpresa: s("clienteEmpresa"),
     clienteEmail: s("clienteEmail"),
     clienteTelefone: s("clienteTelefone"),
-    enderecoObra: s("enderecoObra"),
+    cep: s("cep"),
+    logradouro: s("logradouro"),
+    enderecoNumero: s("enderecoNumero"),
+    complemento: s("complemento"),
+    bairro: s("bairro"),
+    cidade: s("cidade"),
+    uf: s("uf"),
     latitude: s("latitude"),
     longitude: s("longitude"),
     servicos: formData.getAll("servicos").map(String),
@@ -88,6 +100,36 @@ function lerForm(formData: FormData) {
     entregaReal: s("entregaReal"),
     observacoes: s("observacoes"),
     pedidoOrcamentoId: s("pedidoOrcamentoId"),
+  };
+}
+
+/** Monta a linha única do endereço a partir das partes. */
+function comporEndereco(d: {
+  logradouro: string;
+  enderecoNumero: string | null;
+  complemento: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  uf: string | null;
+  cep: string | null;
+}) {
+  const rua = [d.logradouro, d.enderecoNumero].filter(Boolean).join(", ");
+  const meio = [rua, d.complemento, d.bairro].filter(Boolean).join(" - ");
+  const cidadeUf = [d.cidade, d.uf].filter(Boolean).join("/");
+  return [meio, cidadeUf, d.cep].filter(Boolean).join(" · ").slice(0, 255);
+}
+
+/** Campos de endereço para gravar no banco. */
+function dadosEndereco(d: Parameters<typeof comporEndereco>[0]) {
+  return {
+    enderecoObra: comporEndereco(d),
+    cep: d.cep,
+    logradouro: d.logradouro,
+    enderecoNumero: d.enderecoNumero,
+    complemento: d.complemento,
+    bairro: d.bairro,
+    cidade: d.cidade,
+    uf: d.uf,
   };
 }
 
@@ -126,7 +168,7 @@ export async function criarContratoAction(
       clienteEmpresa: d.clienteEmpresa,
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
-      enderecoObra: d.enderecoObra,
+      ...dadosEndereco(d),
       latitude: d.latitude,
       longitude: d.longitude,
       servicos: d.servicos as string[],
@@ -170,7 +212,7 @@ export async function atualizarContratoAction(
       clienteEmpresa: d.clienteEmpresa,
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
-      enderecoObra: d.enderecoObra,
+      ...dadosEndereco(d),
       latitude: d.latitude,
       longitude: d.longitude,
       servicos: d.servicos as string[],

@@ -127,9 +127,18 @@ model Contrato {
   clienteTelefone String? @map("cliente_telefone")
 
   // Obra
-  enderecoObra String      @map("endereco_obra") @db.VarChar(255)
+  // Endereço da obra — estruturado (rastreabilidade) + linha única montada.
+  enderecoObra String  @map("endereco_obra") @db.VarChar(255)
+  cep            String? @db.VarChar(9)
+  logradouro     String? @db.VarChar(180)
+  enderecoNumero String? @map("endereco_numero") @db.VarChar(30)
+  complemento    String? @db.VarChar(120)
+  bairro         String? @db.VarChar(120)
+  cidade         String? @db.VarChar(120)
+  uf             String? @db.VarChar(2)
   latitude     Float?
   longitude    Float?
+
   servicos     Json // lista de ServicoTipo
   valor        Decimal     @db.Decimal(12, 2)
   progresso    Int         @default(0) // 0–100

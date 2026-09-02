@@ -13,6 +13,7 @@ import {
   atualizarContratoAction,
   type EstadoContrato,
 } from "./actions";
+import { EnderecoObraFields } from "./EnderecoObraFields";
 
 const inicial: EstadoContrato = {};
 
@@ -26,7 +27,13 @@ export type ValoresContrato = {
   clienteEmpresa?: string;
   clienteEmail?: string;
   clienteTelefone?: string;
-  enderecoObra?: string;
+  cep?: string;
+  logradouro?: string;
+  enderecoNumero?: string;
+  complemento?: string;
+  bairro?: string;
+  cidade?: string;
+  uf?: string;
   latitude?: string;
   longitude?: string;
   servicos?: string[];
@@ -119,15 +126,23 @@ export function ContratoForm({
         </Linha>
       </Secao>
 
+      <Secao titulo="Endereço da obra">
+        <EnderecoObraFields
+          valores={{
+            cep: v("cep"),
+            logradouro: v("logradouro"),
+            enderecoNumero: v("enderecoNumero"),
+            complemento: v("complemento"),
+            bairro: v("bairro"),
+            cidade: v("cidade"),
+            uf: v("uf"),
+            latitude: v("latitude"),
+            longitude: v("longitude"),
+          }}
+        />
+      </Secao>
+
       <Secao titulo="Obra">
-        <Campo rotulo="Endereço da obra *">
-          <input
-            name="enderecoObra"
-            required
-            defaultValue={v("enderecoObra")}
-            className={campo}
-          />
-        </Campo>
         <div>
           <span className={rotulo}>Frentes de serviço *</span>
           <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -170,30 +185,6 @@ export function ContratoForm({
             />
           </Campo>
         </Linha>
-        <Linha>
-          <Campo rotulo="Latitude">
-            <input
-              name="latitude"
-              inputMode="decimal"
-              placeholder="-15.7942"
-              defaultValue={v("latitude")}
-              className={campo}
-            />
-          </Campo>
-          <Campo rotulo="Longitude">
-            <input
-              name="longitude"
-              inputMode="decimal"
-              placeholder="-47.8822"
-              defaultValue={v("longitude")}
-              className={campo}
-            />
-          </Campo>
-        </Linha>
-        <p className="font-mono text-[0.58rem] leading-relaxed tracking-[0.02em] text-texto-suave">
-          Coordenadas alimentam o Mapa de obras. No Google Maps, clique com o
-          botão direito sobre o ponto da obra e clique nos números para copiar.
-        </p>
       </Secao>
 
       <Secao titulo="Situação e prazos">
