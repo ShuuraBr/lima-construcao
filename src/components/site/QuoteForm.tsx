@@ -6,6 +6,11 @@ import {
   type EstadoOrcamento,
 } from "@/app/(site)/orcamento/actions";
 import { SERVICO_VALORES } from "@/lib/validation";
+import {
+  aplicarMascara,
+  mascaraInteiro,
+  mascaraTelefone,
+} from "@/lib/mascaras";
 
 const estadoInicial: EstadoOrcamento = { status: "idle" };
 
@@ -133,8 +138,10 @@ export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
           id="telefone"
           name="telefone"
           inputMode="tel"
+          placeholder="(61) 99999-9999"
           required
           defaultValue={v.telefone}
+          onInput={aplicarMascara(mascaraTelefone)}
           className={inputCls}
         />
       </Campo>
@@ -180,6 +187,7 @@ export function QuoteForm({ servicoInicial }: { servicoInicial?: string }) {
           inputMode="numeric"
           placeholder="620"
           defaultValue={v.metragemM2}
+          onInput={aplicarMascara(mascaraInteiro)}
           className={inputCls}
         />
       </Campo>

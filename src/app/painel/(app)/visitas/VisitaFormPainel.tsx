@@ -8,6 +8,7 @@ import {
   atualizarVisitaAction,
   type EstadoVisitaPainel,
 } from "./actions";
+import { aplicarMascara, mascaraTelefone } from "@/lib/mascaras";
 
 const inicial: EstadoVisitaPainel = {};
 const campo =
@@ -51,7 +52,14 @@ export function VisitaFormPainel({
           <input name="email" type="email" defaultValue={v("email")} className={campo} />
         </Campo>
         <Campo r="Telefone">
-          <input name="telefone" defaultValue={v("telefone")} className={campo} />
+          <input
+            name="telefone"
+            inputMode="tel"
+            placeholder="(61) 99999-9999"
+            defaultValue={v("telefone")}
+            onInput={aplicarMascara(mascaraTelefone)}
+            className={campo}
+          />
         </Campo>
       </div>
 

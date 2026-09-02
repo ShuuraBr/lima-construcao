@@ -2,6 +2,7 @@
 
 import { useActionState, useId } from "react";
 import { solicitarVisita, type EstadoVisita } from "@/app/(site)/visita/actions";
+import { aplicarMascara, mascaraTelefone } from "@/lib/mascaras";
 
 const estadoInicial: EstadoVisita = { status: "idle" };
 
@@ -114,8 +115,10 @@ export function VisitaForm() {
           id="telefone"
           name="telefone"
           inputMode="tel"
+          placeholder="(61) 99999-9999"
           required
           defaultValue={v.telefone}
+          onInput={aplicarMascara(mascaraTelefone)}
           className={inputCls}
         />
       </Campo>

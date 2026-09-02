@@ -14,6 +14,11 @@ import {
   type EstadoContrato,
 } from "./actions";
 import { EnderecoObraFields } from "./EnderecoObraFields";
+import {
+  aplicarMascara,
+  mascaraMoeda,
+  mascaraTelefone,
+} from "@/lib/mascaras";
 
 const inicial: EstadoContrato = {};
 
@@ -119,7 +124,10 @@ export function ContratoForm({
           <Campo rotulo="Telefone">
             <input
               name="clienteTelefone"
+              inputMode="tel"
+              placeholder="(61) 99999-9999"
               defaultValue={v("clienteTelefone")}
+              onInput={aplicarMascara(mascaraTelefone)}
               className={campo}
             />
           </Campo>
@@ -167,10 +175,11 @@ export function ContratoForm({
           <Campo rotulo="Valor do contrato (R$) *">
             <input
               name="valor"
-              inputMode="decimal"
+              inputMode="numeric"
               placeholder="0,00"
               required
               defaultValue={v("valor")}
+              onInput={aplicarMascara(mascaraMoeda)}
               className={campo}
             />
           </Campo>

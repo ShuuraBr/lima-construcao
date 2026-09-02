@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { exigirSessao, servicosDoContrato, toDateInput } from "@/lib/painel";
+import { moedaParaInput } from "@/lib/mascaras";
 import { ContratoForm } from "../../ContratoForm";
 
 type Props = { params: Promise<{ id: string }> };
@@ -44,7 +45,7 @@ export default async function EditarContratoPage({ params }: Props) {
             latitude: c.latitude != null ? String(c.latitude) : "",
             longitude: c.longitude != null ? String(c.longitude) : "",
             servicos: servicosDoContrato(c.servicos),
-            valor: String(Number(c.valor)).replace(".", ","),
+            valor: moedaParaInput(Number(c.valor)),
             status: c.status,
             progresso: String(c.progresso),
             dataAssinatura: toDateInput(c.dataAssinatura),
