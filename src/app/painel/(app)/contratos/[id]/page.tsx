@@ -12,6 +12,7 @@ import {
 } from "@/lib/painel";
 import { StatusPill } from "@/components/painel/StatusPill";
 import { StatusContratoForm } from "./StatusContratoForm";
+import { ApontamentoForm } from "./ApontamentoForm";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -25,6 +26,11 @@ export default async function ContratoDetalhe({ params }: Props) {
   if (!c) notFound();
 
   const frentes = servicosDoContrato(c.servicos);
+  const apontamentos = await prisma.apontamento.findMany({
+    where: { contratoId: c.id },
+    orderBy: { data: "desc" },
+    take: 50,
+  });
   const orcamento = c.pedidoOrcamentoId
     ? await prisma.pedidoOrcamento.findUnique({
         where: { id: c.pedidoOrcamentoId },
@@ -125,6 +131,59 @@ export default async function ContratoDetalhe({ params }: Props) {
               {c.observacoes}
             </p>
           </div>
+        )}
+      </section>
+
+      <section className="mt-6 border border-borda bg-superficie">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-borda px-4 py-3">
+          <h2 className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-texto-suave">
+            Prestação de serviço — andamentos
+          </h2>
+          <ApontamentoForm
+            contratoId={c.id}
+            frentes={frentes}
+            statusAtual={c.status}
+            progressoAtual={c.progresso}
+          />
+        </div>
+
+        {apontamentos.length === 0 ? (
+          <p className="px-4 py-8 text-center text-sm text-texto-suave">
+            Nenhum andamento registrado ainda.
+          </p>
+        ) : (
+          <ul>
+            {apontamentos.map((a) => (
+              <li
+                key={a.id}
+                className="grid gap-1 border-b border-borda px-4 py-3 last:border-0"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-[0.72rem] tabular-nums text-texto-forte">
+                    {fmtData(a.data)}
+                  </span>
+                  <StatusPill
+                    label={contratoStatusMeta[a.status].label}
+                    tom={contratoStatusMeta[a.status].tom}
+                  />
+                  <span className="font-mono text-[0.66rem] tabular-nums text-texto-suave">
+                    {a.progresso}%
+                  </span>
+                  {a.frente && (
+                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.06em] text-acento-texto">
+                      {SERVICO_LABEL[a.frente] ?? a.frente}
+                    </span>
+                  )}
+                </div>
+                {a.nota && (
+                  <p className="whitespace-pre-wrap text-sm text-texto">{a.nota}</p>
+                )}
+                <span className="font-mono text-[0.58rem] uppercase tracking-[0.08em] text-texto-suave">
+                  {a.autorNome}
+                </span>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
     </div>

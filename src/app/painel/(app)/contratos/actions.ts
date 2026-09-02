@@ -3,9 +3,13 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import type { ServicoTipo } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { exigirSessao } from "@/lib/painel";
-import { CONTRATO_STATUS, SERVICOS_CONTRATO } from "@/lib/painel-shared";
+import {
+  CONTRATO_STATUS,
+  SERVICOS_CONTRATO,
+} from "@/lib/painel-shared";
 
 export type EstadoContrato = {
   erro?: string;
@@ -206,6 +210,91 @@ export async function mudarStatusContratoAction(formData: FormData) {
   revalidatePath(`/painel/contratos/${id}`);
   revalidatePath("/painel/contratos");
   revalidatePath("/painel");
+}
+
+// ---------- apontamentos (prestação de serviço) ----------
+
+const apontamentoSchema = z.object({
+  contratoId: z.string().min(1),
+  data: z
+    .string()
+    .trim()
+    .transform((v) => (v && !Number.isNaN(Date.parse(v)) ? new Date(v) : new Date())),
+  frente: z
+    .string()
+    .trim()
+    .transform((v) => (v ? v : null))
+    .refine(
+      (v) => v === null || (SERVICOS_CONTRATO as readonly string[]).includes(v),
+      "Frente inválida.",
+    ),
+  progresso: z
+    .string()
+    .trim()
+    .transform((v) => Math.min(100, Math.max(0, Number(v || 0) || 0))),
+  status: z.enum(CONTRATO_STATUS),
+  nota: z.string().trim().max(2000).transform((v) => v || null),
+});
+
+export type EstadoApontamento = { erro?: string; ok?: boolean };
+
+export async function registrarApontamentoAction(
+  _prev: EstadoApontamento,
+  formData: FormData,
+): Promise<EstadoApontamento> {
+  const sessao = await exigirSessao();
+  const parsed = apontamentoSchema.safeParse({
+    contratoId: formData.get("contratoId"),
+    data: String(formData.get("data") ?? ""),
+    frente: String(formData.get("frente") ?? ""),
+    progresso: String(formData.get("progresso") ?? ""),
+    status: formData.get("status"),
+    nota: String(formData.get("nota") ?? ""),
+  });
+  if (!parsed.success) {
+    return { erro: parsed.error.issues[0]?.message ?? "Revise os campos." };
+  }
+  const d = parsed.data;
+
+  const contrato = await prisma.contrato.findUnique({
+    where: { id: d.contratoId },
+    select: { entregaReal: true },
+  });
+  if (!contrato) return { erro: "Contrato não encontrado." };
+
+  const concluido = d.status === "CONCLUIDO";
+  const progresso = concluido ? 100 : d.progresso;
+
+  await prisma.$transaction([
+    prisma.apontamento.create({
+      data: {
+        contratoId: d.contratoId,
+        data: d.data,
+        frente: d.frente as ServicoTipo | null,
+        progresso,
+        status: d.status,
+        nota: d.nota,
+        autorId: sessao.id,
+        autorNome: sessao.nome,
+      },
+    }),
+    prisma.contrato.update({
+      where: { id: d.contratoId },
+      data: {
+        status: d.status,
+        progresso,
+        entregaReal: concluido
+          ? (contrato.entregaReal ?? d.data)
+          : undefined,
+      },
+    }),
+  ]);
+
+  revalidatePath(`/painel/contratos/${d.contratoId}`);
+  revalidatePath("/painel/contratos");
+  revalidatePath("/painel/prestacao-servicos");
+  revalidatePath("/painel");
+  return { ok: true };
 }
 
 function planificar(bruto: ReturnType<typeof lerForm>): Record<string, string> {
