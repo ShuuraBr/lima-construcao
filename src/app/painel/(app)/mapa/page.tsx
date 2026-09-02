@@ -39,8 +39,6 @@ export default async function MapaPage() {
     longitude: c.longitude as number,
   }));
 
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? null;
-
   const semCoord = await prisma.contrato.count({
     where: {
       OR: [{ latitude: null }, { longitude: null }],
@@ -63,7 +61,7 @@ export default async function MapaPage() {
         </p>
       </header>
 
-      <MapaObras obras={obras} apiKey={apiKey} />
+      <MapaObras obras={obras} />
     </div>
   );
 }

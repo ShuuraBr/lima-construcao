@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import "leaflet/dist/leaflet.css";
 import { contratoStatusMeta, fmtBRL } from "@/lib/painel-shared";
 
 export type ObraNoMapa = {
@@ -24,41 +25,13 @@ const CORES: Record<string, string> = {
 };
 
 // Brasília como centro padrão
-const CENTRO = { lat: -15.7942, lng: -47.8822 };
+const CENTRO: [number, number] = [-15.7942, -47.8822];
 
-/* ---- estilos do mapa na paleta Lima ---- */
-
-type EstiloMapa = { featureType?: string; elementType?: string; stylers: Record<string, string>[] }[];
-
-// Escuro: base Roxo profundo, água mais escura, vias em prata apagada.
-const ESTILO_ESCURO: EstiloMapa = [
-  { elementType: "geometry", stylers: [{ color: "#2a0a1e" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#C9C9C9" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#1a0512" }] },
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
-  { featureType: "transit", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#7F205A" }] },
-  { featureType: "landscape.man_made", elementType: "geometry", stylers: [{ color: "#331224" }] },
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#4a2a3e" }] },
-  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#7F205A" }] },
-  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#9a8a92" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#3D0029" }] },
-];
-
-// Claro: base Cinza-claro, água em roxo pálido, acento Roxo Lima.
-const ESTILO_CLARO: EstiloMapa = [
-  { elementType: "geometry", stylers: [{ color: "#f1f0f2" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#2B2B2B" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#ffffff" }] },
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
-  { featureType: "transit", stylers: [{ visibility: "off" }] },
-  { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#c9a6bb" }] },
-  { featureType: "landscape.man_made", elementType: "geometry", stylers: [{ color: "#e8e6ea" }] },
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
-  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#e2cdd9" }] },
-  { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#B5548C" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#e6d7e1" }] },
-];
+// OpenStreetMap padrão — gratuito, sem chave. O visual claro/escuro e o
+// tingimento na paleta Lima são feitos por CSS (ver .mapa-lima em globals.css).
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+const ATRIBUICAO =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 function temaEscuro() {
   if (typeof document === "undefined") return true;
@@ -68,132 +41,82 @@ function temaEscuro() {
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true;
 }
 
-let promessaScript: Promise<void> | null = null;
-function carregarMaps(key: string) {
-  if (typeof window !== "undefined" && (window as { google?: unknown }).google) {
-    return Promise.resolve();
-  }
-  if (!promessaScript) {
-    promessaScript = new Promise<void>((resolve, reject) => {
-      const s = document.createElement("script");
-      s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&language=pt-BR&region=BR`;
-      s.async = true;
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error("Falha ao carregar o Google Maps."));
-      document.head.appendChild(s);
-    });
-  }
-  return promessaScript;
-}
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export function MapaObras({
-  obras,
-  apiKey,
-}: {
-  obras: ObraNoMapa[];
-  apiKey: string | null;
-}) {
+export function MapaObras({ obras }: { obras: ObraNoMapa[] }) {
   const ref = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [erro, setErro] = useState<string | null>(null);
-  const [pronto, setPronto] = useState(false);
 
   useEffect(() => {
-    if (!apiKey || !ref.current) return;
+    if (!ref.current) return;
     let cancelado = false;
-
     const limpezas: (() => void)[] = [];
 
-    carregarMaps(apiKey)
-      .then(() => {
-        if (cancelado || !ref.current) return;
-        const g = (window as any).google;
-        const mapa = new g.maps.Map(ref.current, {
-          center: CENTRO,
-          zoom: 11,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false,
-          styles: temaEscuro() ? ESTILO_ESCURO : ESTILO_CLARO,
-        });
+    const marcarTema = () => {
+      wrapRef.current?.setAttribute("data-escuro", String(temaEscuro()));
+    };
+    marcarTema();
 
-        const aplicarTema = () =>
-          mapa.setOptions({
-            styles: temaEscuro() ? ESTILO_ESCURO : ESTILO_CLARO,
-          });
+    import("leaflet")
+      .then(({ default: L }) => {
+        if (cancelado || !ref.current) return;
+
+        const mapa = L.map(ref.current, { scrollWheelZoom: true }).setView(
+          CENTRO,
+          11,
+        );
+
+        L.tileLayer(TILE_URL, {
+          attribution: ATRIBUICAO,
+          maxZoom: 19,
+        }).addTo(mapa);
+
         const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
-        mq?.addEventListener?.("change", aplicarTema);
-        const obs = new MutationObserver(aplicarTema);
+        mq?.addEventListener?.("change", marcarTema);
+        const obs = new MutationObserver(marcarTema);
         obs.observe(document.documentElement, {
           attributes: true,
           attributeFilter: ["data-theme"],
         });
         limpezas.push(() => {
-          mq?.removeEventListener?.("change", aplicarTema);
+          mq?.removeEventListener?.("change", marcarTema);
           obs.disconnect();
+          mapa.remove();
         });
 
-        const bounds = new g.maps.LatLngBounds();
-        const info = new g.maps.InfoWindow();
-
+        const pontos: [number, number][] = [];
         obras.forEach((o) => {
-          const pos = { lat: o.latitude, lng: o.longitude };
-          bounds.extend(pos);
-          const marcador = new g.maps.Marker({
-            position: pos,
-            map: mapa,
-            title: `${o.numero} — ${o.clienteNome}`,
-            icon: {
-              path: g.maps.SymbolPath.CIRCLE,
-              scale: o.status === "EM_EXECUCAO" ? 10 : 8,
-              fillColor: CORES[o.status] ?? "#7F205A",
-              fillOpacity: 1,
-              strokeColor: temaEscuro() ? "#f1f0f2" : "#ffffff",
-              strokeWeight: 2.5,
-            },
-          });
-          marcador.addListener("click", () => {
-            info.setContent(
-              `<div style="font-family:system-ui;font-size:13px;line-height:1.5;color:#1c1c1c">
+          const pos: [number, number] = [o.latitude, o.longitude];
+          pontos.push(pos);
+          L.circleMarker(pos, {
+            radius: o.status === "EM_EXECUCAO" ? 9 : 7,
+            fillColor: CORES[o.status] ?? "#7F205A",
+            fillOpacity: 1,
+            color: "#ffffff",
+            weight: 2,
+          })
+            .addTo(mapa)
+            .bindPopup(
+              `<div style="font-size:13px;line-height:1.5">
                 <strong>${o.numero}</strong> · ${contratoStatusMeta[o.status].label}<br/>
                 ${o.clienteNome}<br/>
-                <span style="color:#666">${o.enderecoObra}</span><br/>
+                <span style="opacity:.7">${o.enderecoObra}</span><br/>
                 ${o.progresso}% · ${fmtBRL(o.valor)}<br/>
-                <a href="/painel/contratos/${o.id}" style="color:#7F205A">abrir contrato →</a>
+                <a href="/painel/contratos/${o.id}">abrir contrato &rarr;</a>
               </div>`,
             );
-            info.open(mapa, marcador);
-          });
         });
 
-        if (obras.length === 1) mapa.setCenter(bounds.getCenter());
-        else if (obras.length > 1) mapa.fitBounds(bounds, 64);
-
-        setPronto(true);
+        if (pontos.length === 1) mapa.setView(pontos[0], 14);
+        else if (pontos.length > 1)
+          mapa.fitBounds(pontos, { padding: [48, 48] });
       })
-      .catch((e) => setErro(e.message ?? "Erro ao carregar o mapa."));
+      .catch((e) => setErro(e?.message ?? "Erro ao carregar o mapa."));
 
     return () => {
       cancelado = true;
       limpezas.forEach((fn) => fn());
     };
-  }, [apiKey, obras]);
-
-  if (!apiKey) {
-    return (
-      <div className="border border-borda bg-superficie p-6">
-        <p className="font-mono text-[0.66rem] uppercase tracking-[0.12em] text-acento-texto">
-          Mapa não configurado
-        </p>
-        <p className="mt-2 max-w-[60ch] text-sm text-texto-suave">
-          Defina a variável <code className="text-acento-texto">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>{" "}
-          no painel da Hostinger para exibir o mapa. Enquanto isso, as obras com
-          coordenadas aparecem na lista abaixo.
-        </p>
-        <ListaObras obras={obras} />
-      </div>
-    );
-  }
+  }, [obras]);
 
   return (
     <div className="grid gap-4">
@@ -211,19 +134,19 @@ export function MapaObras({
           </span>
         ))}
       </div>
-      <div className="relative border border-borda bg-superficie">
+
+      <div
+        ref={wrapRef}
+        className="mapa-lima relative overflow-hidden border border-borda bg-superficie"
+      >
         <div ref={ref} className="h-[62vh] min-h-[420px] w-full" />
-        {!pronto && !erro && (
-          <p className="absolute inset-0 flex items-center justify-center font-mono text-[0.7rem] uppercase tracking-[0.1em] text-texto-suave">
-            Carregando mapa…
-          </p>
-        )}
         {erro && (
-          <p className="absolute inset-0 flex items-center justify-center px-6 text-center font-mono text-[0.7rem] text-acento-texto">
+          <p className="absolute inset-0 z-[500] flex items-center justify-center px-6 text-center font-mono text-[0.7rem] text-acento-texto">
             {erro}
           </p>
         )}
       </div>
+
       <ListaObras obras={obras} />
     </div>
   );
@@ -232,7 +155,7 @@ export function MapaObras({
 function ListaObras({ obras }: { obras: ObraNoMapa[] }) {
   if (obras.length === 0) {
     return (
-      <p className="mt-3 text-sm text-texto-suave">
+      <p className="text-sm text-texto-suave">
         Nenhuma obra com coordenadas cadastradas. Preencha latitude e longitude na
         tela do contrato.
       </p>

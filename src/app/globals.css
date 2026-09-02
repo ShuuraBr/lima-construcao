@@ -230,3 +230,41 @@
     transform: translate3d(-6%, -3%, 0) scale(1.08);
   }
 }
+
+/* Mapa de obras (Leaflet) — leve tingimento na paleta Lima */
+.mapa-lima .leaflet-container {
+  background: var(--color-superficie-2);
+  font-family: var(--font-sans);
+}
+/* claro: leve dessaturação + puxada pro roxo */
+.mapa-lima .leaflet-tile {
+  filter: saturate(0.82) hue-rotate(-10deg) brightness(1.02);
+}
+/* escuro: inverte os tiles do OSM e recompõe na paleta */
+.mapa-lima[data-escuro="true"] .leaflet-container {
+  background: #1a0512;
+}
+.mapa-lima[data-escuro="true"] .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) saturate(0.7) brightness(0.9)
+    contrast(0.95);
+}
+.mapa-lima .leaflet-bar a,
+.mapa-lima .leaflet-popup-content-wrapper,
+.mapa-lima .leaflet-popup-tip {
+  background: var(--color-superficie);
+  color: var(--color-texto-forte);
+  border: 1px solid var(--color-borda);
+}
+.mapa-lima .leaflet-bar a {
+  border-bottom-color: var(--color-borda);
+}
+.mapa-lima .leaflet-popup-content a {
+  color: var(--color-acento-texto);
+}
+.mapa-lima .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--color-superficie) 82%, transparent);
+  color: var(--color-texto-suave);
+}
+.mapa-lima .leaflet-control-attribution a {
+  color: var(--color-texto-suave);
+}
