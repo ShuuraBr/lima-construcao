@@ -28,7 +28,7 @@ export default async function VisitasPage({ searchParams }: Props) {
   });
 
   return (
-    <div className="mx-auto max-w-[1080px]">
+    <div className="w-full">
       <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-texto-suave">

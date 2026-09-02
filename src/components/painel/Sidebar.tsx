@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Simbolo } from "@/components/marca/Simbolo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { encerrarSessaoAction } from "@/app/painel/entrar/actions";
 
 const ativos = [
@@ -72,10 +73,15 @@ export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
       ))}
 
       <div className="mt-auto border-t border-borda px-5 pb-4 pt-4">
-        <p className="font-display text-sm font-bold text-branco">{nome}</p>
-        <p className="font-mono text-[0.58rem] uppercase tracking-[0.1em] text-texto-suave">
-          {cargo} · perfil único
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="font-display text-sm font-bold text-branco">{nome}</p>
+            <p className="font-mono text-[0.58rem] uppercase tracking-[0.1em] text-texto-suave">
+              {cargo} · perfil único
+            </p>
+          </div>
+          <ThemeToggle />
+        </div>
         <form action={encerrarSessaoAction}>
           <button
             type="submit"
@@ -95,6 +101,8 @@ export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
         <span className="font-display text-sm font-black tracking-[0.16em] text-branco">
           LIMA · PAINEL
         </span>
+        <div className="flex items-center gap-2">
+        <ThemeToggle />
         <button
           type="button"
           onClick={() => setAberto((v) => !v)}
@@ -106,6 +114,7 @@ export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
             {aberto ? <path d="M3 3l12 12M15 3L3 15" /> : <path d="M2 4h14M2 9h14M2 14h14" />}
           </svg>
         </button>
+        </div>
       </div>
 
       {aberto && (
@@ -116,7 +125,7 @@ export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
 
       {/* sidebar desktop */}
       <aside className="on-dark hidden w-[248px] shrink-0 border-r border-borda py-5 md:block">
-        <div className="sticky top-5 flex h-[calc(100dvh-2.5rem)] flex-col">
+        <div className="sticky top-5 flex h-[calc(100dvh-2.5rem)] flex-col overflow-y-auto">
           {nav}
         </div>
       </aside>

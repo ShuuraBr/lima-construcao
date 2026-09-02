@@ -11,7 +11,7 @@ export default async function UsuariosPage() {
   });
 
   return (
-    <div className="mx-auto max-w-[880px]">
+    <div className="mx-auto w-full max-w-[1200px]">
       <header className="mb-6">
         <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-texto-suave">
           Administração

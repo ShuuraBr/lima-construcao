@@ -69,7 +69,7 @@ export default async function PainelHome() {
   ];
 
   return (
-    <div className="mx-auto max-w-[1080px]">
+    <div className="w-full">
       <header className="mb-7">
         <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-texto-suave">
           Painel · visão geral

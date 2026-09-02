@@ -14,7 +14,7 @@ export default async function EditarVisitaPage({ params }: Props) {
   if (!v) notFound();
 
   return (
-    <div className="mx-auto max-w-[720px]">
+    <div className="mx-auto w-full max-w-[1200px]">
       <Link
         href={`/painel/visitas/${v.id}`}
         className="font-mono text-[0.62rem] uppercase tracking-[0.1em] text-texto-suave hover:text-acento-texto"
