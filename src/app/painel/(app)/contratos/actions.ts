@@ -23,6 +23,17 @@ const dataOpc = z
   .refine((v) => v === null || !Number.isNaN(Date.parse(v)), "Data inválida.")
   .transform((v) => (v ? new Date(v) : null));
 
+const coordOpc = (min: number, max: number, msg: string) =>
+  z
+    .string()
+    .trim()
+    .transform((v) => v.replace(",", ".").replace(/[^\d.\-]/g, ""))
+    .transform((v) => (v === "" || v === "-" ? null : Number(v)))
+    .refine(
+      (v) => v === null || (!Number.isNaN(v) && v >= min && v <= max),
+      msg,
+    );
+
 const contratoSchema = z.object({
   clienteNome: z.string().trim().min(2, "Informe o cliente."),
   clienteEmpresa: z.string().trim().max(160).transform((v) => v || null),
@@ -33,6 +44,8 @@ const contratoSchema = z.object({
     .refine((v) => !v || z.string().email().safeParse(v).success, "E-mail inválido."),
   clienteTelefone: z.string().trim().max(40).transform((v) => v || null),
   enderecoObra: z.string().trim().min(4, "Informe o endereço da obra."),
+  latitude: coordOpc(-90, 90, "Latitude inválida."),
+  longitude: coordOpc(-180, 180, "Longitude inválida."),
   servicos: z
     .array(z.enum(SERVICOS_CONTRATO))
     .min(1, "Selecione ao menos uma frente."),
@@ -63,6 +76,8 @@ function lerForm(formData: FormData) {
     clienteEmail: s("clienteEmail"),
     clienteTelefone: s("clienteTelefone"),
     enderecoObra: s("enderecoObra"),
+    latitude: s("latitude"),
+    longitude: s("longitude"),
     servicos: formData.getAll("servicos").map(String),
     valor: s("valor"),
     status: s("status"),
@@ -112,6 +127,8 @@ export async function criarContratoAction(
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
       enderecoObra: d.enderecoObra,
+      latitude: d.latitude,
+      longitude: d.longitude,
       servicos: d.servicos as string[],
       valor: d.valor,
       progresso: d.progresso,
@@ -154,6 +171,8 @@ export async function atualizarContratoAction(
       clienteEmail: d.clienteEmail,
       clienteTelefone: d.clienteTelefone,
       enderecoObra: d.enderecoObra,
+      latitude: d.latitude,
+      longitude: d.longitude,
       servicos: d.servicos as string[],
       valor: d.valor,
       progresso: d.progresso,

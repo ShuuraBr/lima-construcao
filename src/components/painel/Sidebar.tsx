@@ -13,10 +13,11 @@ const ativos = [
   { href: "/painel/contratos", label: "Contratos" },
   { href: "/painel/prestacao-servicos", label: "Prestação de serviços" },
   { href: "/painel/visitas", label: "Agenda de visitas" },
+  { href: "/painel/mapa", label: "Mapa de obras" },
   { href: "/painel/usuarios", label: "Usuários" },
 ];
 
-const emBreve = ["Mapa de obras"];
+const emBreve: string[] = [];
 
 export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
   const pathname = usePathname();
@@ -60,17 +61,21 @@ export function Sidebar({ nome, cargo }: { nome: string; cargo: string }) {
         );
       })}
 
-      <span className="px-5 pb-1.5 pt-5 font-mono text-[0.58rem] uppercase tracking-[0.18em] text-texto-suave">
-        Em breve
-      </span>
-      {emBreve.map((label) => (
-        <span
-          key={label}
-          className="px-5 py-2 font-mono text-[0.7rem] uppercase tracking-[0.06em] text-texto-suave/55"
-        >
-          {label}
-        </span>
-      ))}
+      {emBreve.length > 0 && (
+        <>
+          <span className="px-5 pb-1.5 pt-5 font-mono text-[0.58rem] uppercase tracking-[0.18em] text-texto-suave">
+            Em breve
+          </span>
+          {emBreve.map((label) => (
+            <span
+              key={label}
+              className="px-5 py-2 font-mono text-[0.7rem] uppercase tracking-[0.06em] text-texto-suave/55"
+            >
+              {label}
+            </span>
+          ))}
+        </>
+      )}
 
       <div className="mt-auto border-t border-borda px-5 pb-4 pt-4">
         <div className="flex items-start justify-between gap-3">

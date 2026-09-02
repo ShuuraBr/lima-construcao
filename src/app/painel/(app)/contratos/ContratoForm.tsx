@@ -27,6 +27,8 @@ export type ValoresContrato = {
   clienteEmail?: string;
   clienteTelefone?: string;
   enderecoObra?: string;
+  latitude?: string;
+  longitude?: string;
   servicos?: string[];
   valor?: string;
   status?: string;
@@ -168,6 +170,30 @@ export function ContratoForm({
             />
           </Campo>
         </Linha>
+        <Linha>
+          <Campo rotulo="Latitude">
+            <input
+              name="latitude"
+              inputMode="decimal"
+              placeholder="-15.7942"
+              defaultValue={v("latitude")}
+              className={campo}
+            />
+          </Campo>
+          <Campo rotulo="Longitude">
+            <input
+              name="longitude"
+              inputMode="decimal"
+              placeholder="-47.8822"
+              defaultValue={v("longitude")}
+              className={campo}
+            />
+          </Campo>
+        </Linha>
+        <p className="font-mono text-[0.58rem] leading-relaxed tracking-[0.02em] text-texto-suave">
+          Coordenadas alimentam o Mapa de obras. No Google Maps, clique com o
+          botão direito sobre o ponto da obra e clique nos números para copiar.
+        </p>
       </Secao>
 
       <Secao titulo="Situação e prazos">

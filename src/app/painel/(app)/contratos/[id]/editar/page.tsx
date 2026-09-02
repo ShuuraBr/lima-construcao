@@ -35,6 +35,8 @@ export default async function EditarContratoPage({ params }: Props) {
             clienteEmail: c.clienteEmail ?? "",
             clienteTelefone: c.clienteTelefone ?? "",
             enderecoObra: c.enderecoObra,
+            latitude: c.latitude != null ? String(c.latitude) : "",
+            longitude: c.longitude != null ? String(c.longitude) : "",
             servicos: servicosDoContrato(c.servicos),
             valor: String(Number(c.valor)).replace(".", ","),
             status: c.status,

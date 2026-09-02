@@ -44,6 +44,12 @@ export default async function ContratoDetalhe({ params }: Props) {
     ["E-mail", c.clienteEmail || "—"],
     ["Telefone", c.clienteTelefone || "—"],
     ["Endereço da obra", c.enderecoObra],
+    [
+      "Coordenadas",
+      c.latitude != null && c.longitude != null
+        ? `${c.latitude}, ${c.longitude}`
+        : "—",
+    ],
     ["Frentes", frentes.map((f) => SERVICO_LABEL[f] ?? f).join(", ") || "—"],
     ["Valor", fmtBRL(Number(c.valor))],
     ["Assinatura", dt(c.dataAssinatura)],
