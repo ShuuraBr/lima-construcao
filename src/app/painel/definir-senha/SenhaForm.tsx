@@ -2,10 +2,9 @@
 
 import { useActionState } from "react";
 import { definirSenhaAction, type EstadoSenha } from "./actions";
+import { CampoSenha } from "@/components/painel/CampoSenha";
 
 const inicial: EstadoSenha = {};
-const campo =
-  "border border-borda bg-superficie-2 px-3 py-2.5 text-[0.92rem] text-texto outline-none focus:outline-2 focus:outline-acento-texto";
 
 export function SenhaForm({ token }: { token: string }) {
   const [estado, action, pendente] = useActionState(definirSenhaAction, inicial);
@@ -14,33 +13,19 @@ export function SenhaForm({ token }: { token: string }) {
     <form action={action} className="mt-7 flex flex-col gap-4">
       <input type="hidden" name="token" value={token} />
 
-      <label className="flex flex-col gap-1.5">
-        <span className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-texto-suave">
-          Nova senha
-        </span>
-        <input
-          name="senha"
-          type="password"
-          autoComplete="new-password"
-          minLength={8}
-          required
-          className={campo}
-        />
-      </label>
+      <CampoSenha
+        name="senha"
+        label="Nova senha"
+        autoComplete="new-password"
+        minLength={8}
+      />
 
-      <label className="flex flex-col gap-1.5">
-        <span className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-texto-suave">
-          Confirmar senha
-        </span>
-        <input
-          name="confirmar"
-          type="password"
-          autoComplete="new-password"
-          minLength={8}
-          required
-          className={campo}
-        />
-      </label>
+      <CampoSenha
+        name="confirmar"
+        label="Confirmar senha"
+        autoComplete="new-password"
+        minLength={8}
+      />
 
       {estado.erro && (
         <p

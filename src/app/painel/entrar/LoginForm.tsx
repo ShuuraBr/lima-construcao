@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { entrarAction, type EstadoLogin } from "./actions";
+import { CampoSenha } from "@/components/painel/CampoSenha";
 
 const inicial: EstadoLogin = {};
 
@@ -25,18 +26,7 @@ export function LoginForm({ de }: { de?: string }) {
         />
       </label>
 
-      <label className="flex flex-col gap-1.5">
-        <span className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-texto-suave">
-          Senha
-        </span>
-        <input
-          name="senha"
-          type="password"
-          autoComplete="current-password"
-          required
-          className="border border-borda bg-superficie-2 px-3 py-2.5 text-[0.92rem] text-texto outline-none focus:outline-2 focus:outline-acento-texto"
-        />
-      </label>
+      <CampoSenha name="senha" label="Senha" autoComplete="current-password" />
 
       {estado.erro && (
         <p
