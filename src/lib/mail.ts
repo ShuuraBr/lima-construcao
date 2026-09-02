@@ -112,7 +112,12 @@ export async function enviarNotificacaoVisita(v: {
     linha("E-mail", v.email) +
     linha("Telefone", v.telefone) +
     linha("Endereço", v.endereco) +
-    linha("Preferência de data/horário", v.preferencia) +
+    linha(
+      "Preferência de data/horário",
+      v.preferencia && !Number.isNaN(Date.parse(v.preferencia))
+        ? new Date(v.preferencia).toLocaleString("pt-BR")
+        : v.preferencia,
+    ) +
     (v.mensagem ? `\nMensagem:\n${v.mensagem}\n` : "") +
     `\n— Confirmar data e hora manualmente no painel.`;
 

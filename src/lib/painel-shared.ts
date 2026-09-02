@@ -128,6 +128,13 @@ export function diasAtras(dias: number) {
   return new Date(Date.now() - dias * 24 * 60 * 60 * 1000);
 }
 
+/** Preferência de data/horário: formata se for uma data válida, senão devolve o texto. */
+export function fmtPreferencia(v: string | null | undefined): string {
+  if (!v) return "—";
+  const t = Date.parse(v);
+  return Number.isNaN(t) ? v : fmtDataHora(new Date(t));
+}
+
 /** `servicos` vem do banco como Json (unknown). Normaliza para lista de strings. */
 export function servicosDoContrato(raw: unknown): string[] {
   if (Array.isArray(raw)) return raw.filter((s): s is string => typeof s === "string");

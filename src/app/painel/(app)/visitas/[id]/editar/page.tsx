@@ -43,7 +43,10 @@ export default async function EditarVisitaPage({ params }: Props) {
             uf: v.uf ?? "",
             latitude: v.latitude != null ? String(v.latitude) : "",
             longitude: v.longitude != null ? String(v.longitude) : "",
-            preferencia: v.preferencia ?? "",
+            preferencia:
+              v.preferencia && !Number.isNaN(Date.parse(v.preferencia))
+                ? toDateTimeInput(new Date(v.preferencia))
+                : "",
             mensagem: v.mensagem ?? "",
             status: v.status,
             agendadaEm: toDateTimeInput(v.agendadaEm),

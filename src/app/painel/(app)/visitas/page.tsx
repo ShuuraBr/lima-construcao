@@ -6,6 +6,7 @@ import {
   VISITA_STATUS,
   fmtData,
   fmtDataHora,
+  fmtPreferencia,
   visitaStatusMeta,
   type VisitaStatusT,
 } from "@/lib/painel";
@@ -100,7 +101,7 @@ export default async function VisitasPage({ searchParams }: Props) {
                 </td>
                 <td className="px-4 py-3 text-[0.82rem] text-texto">{v.endereco}</td>
                 <td className="px-4 py-3 text-[0.78rem] text-texto-suave">
-                  {v.preferencia || "—"}
+                  {fmtPreferencia(v.preferencia)}
                 </td>
                 <td className="px-4 py-3 font-mono text-[0.76rem] tabular-nums text-texto">
                   {v.agendadaEm ? fmtDataHora(v.agendadaEm) : "—"}

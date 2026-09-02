@@ -152,11 +152,12 @@ export function VisitaForm() {
           label="Preferência de data e horário"
           name="preferencia"
           erro={e.preferencia}
-          hint="Ex.: qualquer manhã da próxima semana"
+          hint="A confirmação final é feita pela equipe da Lima."
         >
           <input
             id="preferencia"
             name="preferencia"
+            type="datetime-local"
             defaultValue={v.preferencia}
             className={inputCls}
           />

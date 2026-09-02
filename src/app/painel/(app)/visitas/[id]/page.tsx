@@ -5,6 +5,7 @@ import { exigirSessao } from "@/lib/painel";
 import {
   fmtData,
   fmtDataHora,
+  fmtPreferencia,
   toDateTimeInput,
   visitaStatusMeta,
 } from "@/lib/painel";
@@ -42,7 +43,7 @@ export default async function VisitaDetalhe({ params }: Props) {
     ["E-mail", v.email || "—"],
     ["Telefone", v.telefone || "—"],
     ["Endereço da obra", v.endereco],
-    ["Preferência de data/horário", v.preferencia || "—"],
+    ["Preferência de data/horário", fmtPreferencia(v.preferencia)],
     ["Agendada para", v.agendadaEm ? fmtDataHora(v.agendadaEm) : "—"],
     ["Origem", v.origem],
     ["Recebida em", fmtData(v.criadoEm)],

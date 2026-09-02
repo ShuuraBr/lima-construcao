@@ -82,7 +82,12 @@ export function VisitaFormPainel({
       </div>
 
       <Campo r="Preferência de data/horário">
-        <input name="preferencia" defaultValue={v("preferencia")} className={campo} />
+        <input
+          name="preferencia"
+          type="datetime-local"
+          defaultValue={v("preferencia")}
+          className={campo}
+        />
       </Campo>
       <Campo r="Mensagem do solicitante">
         <textarea name="mensagem" rows={3} defaultValue={v("mensagem")} className={campo} />
