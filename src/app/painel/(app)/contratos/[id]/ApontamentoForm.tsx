@@ -17,22 +17,28 @@ const campo =
   "w-full border border-borda bg-superficie-2 px-3 py-2 text-[0.86rem] text-texto outline-none focus:outline-2 focus:outline-acento-texto";
 const rot = "font-mono text-[0.54rem] uppercase tracking-[0.12em] text-texto-suave";
 
+const AVISAVEIS = ["EM_EXECUCAO", "CONCLUIDO", "CANCELADO"];
+
 export function ApontamentoForm({
   contratoId,
   frentes,
   statusAtual,
   progressoAtual,
+  temEmail,
 }: {
   contratoId: string;
   frentes: string[];
   statusAtual: string;
   progressoAtual: number;
+  temEmail: boolean;
 }) {
   const [estado, action, pendente] = useActionState(
     registrarApontamentoAction,
     inicial,
   );
   const [aberto, setAberto] = useState(false);
+  const [status, setStatus] = useState(statusAtual);
+  const avisaCliente = status !== statusAtual && AVISAVEIS.includes(status);
 
   if (!aberto) {
     return (
@@ -76,7 +82,12 @@ export function ApontamentoForm({
         </label>
         <label className="grid gap-1">
           <span className={rot}>Status</span>
-          <select name="status" defaultValue={statusAtual} className={campo}>
+          <select
+            name="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className={campo}
+          >
             {CONTRATO_STATUS.map((s) => (
               <option key={s} value={s}>
                 {contratoStatusMeta[s].label}
@@ -100,6 +111,21 @@ export function ApontamentoForm({
         <span className={rot}>Nota</span>
         <textarea name="nota" rows={3} className={campo} />
       </label>
+
+      {avisaCliente && (
+        <label className="flex items-center gap-2 text-[0.72rem] text-texto">
+          <input
+            type="checkbox"
+            name="notificar"
+            defaultChecked={temEmail}
+            disabled={!temEmail}
+            className="accent-roxo"
+          />
+          {temEmail
+            ? "Avisar o cliente por e-mail sobre a mudança de status"
+            : "Cliente sem e-mail cadastrado"}
+        </label>
+      )}
 
       {estado.erro && (
         <p className="border border-acento-texto/60 bg-acento-texto/10 px-3 py-2 font-mono text-[0.64rem] text-acento-texto">

@@ -11,6 +11,39 @@ import {
   dadosEndereco,
   type PartesEndereco,
 } from "@/lib/endereco";
+import { enviarAtualizacaoContrato } from "@/lib/mail";
+
+const STATUS_AVISAVEIS = ["EM_EXECUCAO", "CONCLUIDO", "CANCELADO"] as const;
+
+async function avisarCliente(
+  id: string,
+  statusAnterior: string,
+  novoStatus: string,
+  avisar: boolean,
+) {
+  if (
+    !avisar ||
+    statusAnterior === novoStatus ||
+    !(STATUS_AVISAVEIS as readonly string[]).includes(novoStatus)
+  )
+    return;
+  try {
+    const c = await prisma.contrato.findUnique({
+      where: { id },
+      select: { clienteEmail: true, clienteNome: true, numero: true, enderecoObra: true },
+    });
+    if (!c?.clienteEmail) return;
+    await enviarAtualizacaoContrato({
+      email: c.clienteEmail,
+      nome: c.clienteNome,
+      numero: c.numero,
+      status: novoStatus as "EM_EXECUCAO" | "CONCLUIDO" | "CANCELADO",
+      enderecoObra: c.enderecoObra,
+    });
+  } catch (err) {
+    console.error("[contrato] falha ao notificar o cliente:", err);
+  }
+}
 import {
   CONTRATO_STATUS,
   SERVICOS_CONTRATO,
@@ -230,13 +263,12 @@ export async function mudarStatusContratoAction(formData: FormData) {
   if (!parsed.success) return;
 
   const { id, status, progresso } = parsed.data;
+  const avisar = formData.get("notificar") !== null;
   const concluido = status === "CONCLUIDO";
-  const atual = concluido
-    ? await prisma.contrato.findUnique({
-        where: { id },
-        select: { entregaReal: true },
-      })
-    : null;
+  const atual = await prisma.contrato.findUnique({
+    where: { id },
+    select: { entregaReal: true, status: true },
+  });
 
   await prisma.contrato.update({
     where: { id },
@@ -246,6 +278,8 @@ export async function mudarStatusContratoAction(formData: FormData) {
       entregaReal: concluido ? (atual?.entregaReal ?? new Date()) : undefined,
     },
   });
+
+  await avisarCliente(id, atual?.status ?? status, status, avisar);
 
   revalidatePath(`/painel/contratos/${id}`);
   revalidatePath("/painel/contratos");
@@ -298,10 +332,11 @@ export async function registrarApontamentoAction(
 
   const contrato = await prisma.contrato.findUnique({
     where: { id: d.contratoId },
-    select: { entregaReal: true },
+    select: { entregaReal: true, status: true },
   });
   if (!contrato) return { erro: "Contrato não encontrado." };
 
+  const avisar = formData.get("notificar") !== null;
   const concluido = d.status === "CONCLUIDO";
   const progresso = concluido ? 100 : d.progresso;
 
@@ -329,6 +364,8 @@ export async function registrarApontamentoAction(
       },
     }),
   ]);
+
+  await avisarCliente(d.contratoId, contrato.status, d.status, avisar);
 
   revalidatePath(`/painel/contratos/${d.contratoId}`);
   revalidatePath("/painel/contratos");

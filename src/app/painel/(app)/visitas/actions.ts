@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { exigirSessao } from "@/lib/painel";
 import { VISITA_STATUS } from "@/lib/painel-shared";
 import { comporEndereco } from "@/lib/endereco";
+import { enviarAtualizacaoVisita } from "@/lib/mail";
 
 const coordOpc = (min: number, max: number, msg: string) =>
   z
@@ -158,11 +159,36 @@ export async function gerirVisitaAction(formData: FormData) {
   });
   if (!parsed.success) return;
   const { id, status, agendadaEm, observacoesInternas } = parsed.data;
+  const avisar = formData.get("notificar") !== null;
 
-  await prisma.visita.update({
+  const antes = await prisma.visita.findUnique({
+    where: { id },
+    select: { status: true, email: true, nome: true, endereco: true },
+  });
+
+  const atual = await prisma.visita.update({
     where: { id },
     data: { status, agendadaEm, observacoesInternas },
   });
+
+  if (
+    avisar &&
+    antes &&
+    antes.status !== status &&
+    (status === "CONFIRMADA" || status === "CANCELADA")
+  ) {
+    try {
+      await enviarAtualizacaoVisita({
+        email: atual.email,
+        nome: atual.nome,
+        status,
+        agendadaEm: atual.agendadaEm,
+        endereco: atual.endereco,
+      });
+    } catch (err) {
+      console.error("[visita] falha ao notificar o cliente:", err);
+    }
+  }
 
   revalidatePath(`/painel/visitas/${id}`);
   revalidatePath("/painel/visitas");

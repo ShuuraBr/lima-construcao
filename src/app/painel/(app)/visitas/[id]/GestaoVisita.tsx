@@ -12,13 +12,17 @@ export function GestaoVisita({
   status,
   agendadaEm,
   observacoesInternas,
+  temEmail,
 }: {
   id: string;
   status: string;
   agendadaEm: string;
   observacoesInternas: string;
+  temEmail: boolean;
 }) {
   const [s, setS] = useState(status);
+  const avisaCliente =
+    s !== status && (s === "CONFIRMADA" || s === "CANCELADA");
 
   return (
     <form action={gerirVisitaAction} className="grid gap-3">
@@ -64,6 +68,20 @@ export function GestaoVisita({
           className={campo}
         />
       </label>
+      {avisaCliente && (
+        <label className="flex items-center gap-2 text-[0.72rem] text-texto">
+          <input
+            type="checkbox"
+            name="notificar"
+            defaultChecked={temEmail}
+            disabled={!temEmail}
+            className="accent-roxo"
+          />
+          {temEmail
+            ? "Avisar o cliente por e-mail"
+            : "Cliente sem e-mail cadastrado"}
+        </label>
+      )}
       <div>
         <button
           type="submit"

@@ -106,6 +106,7 @@ export default async function VisitaDetalhe({ params }: Props) {
               status={v.status}
               agendadaEm={toDateTimeInput(v.agendadaEm)}
               observacoesInternas={v.observacoesInternas ?? ""}
+              temEmail={Boolean(v.email)}
             />
           </div>
         </div>

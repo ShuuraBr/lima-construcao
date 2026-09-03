@@ -137,6 +137,98 @@ export async function enviarNotificacaoVisita(v: {
   return { enviado: true as const };
 }
 
+const ASSINATURA =
+  "\n\nEquipe Lima Construção e Instalação\nEngenheiro responsável: Erick";
+
+async function enviarAoCliente(
+  para: string | null | undefined,
+  assunto: string,
+  corpo: string,
+  contexto: string,
+) {
+  if (!para) return { enviado: false as const };
+  const texto = corpo + ASSINATURA;
+  if (!smtpConfigurado()) {
+    console.info(`[mail] SMTP não configurado — ${contexto} não enviado.\n${texto}`);
+    return { enviado: false as const };
+  }
+  await getTransporter().sendMail({
+    from: process.env.MAIL_FROM,
+    to: para,
+    replyTo: process.env.MAIL_TO,
+    subject: assunto,
+    text: texto,
+  });
+  return { enviado: true as const };
+}
+
+/** Aviso ao cliente sobre a visita técnica (confirmação ou cancelamento). */
+export async function enviarAtualizacaoVisita(v: {
+  email: string | null;
+  nome: string;
+  status: "CONFIRMADA" | "CANCELADA";
+  agendadaEm: Date | null;
+  endereco: string;
+}) {
+  if (v.status === "CONFIRMADA") {
+    const quando = v.agendadaEm
+      ? v.agendadaEm.toLocaleString("pt-BR", { dateStyle: "full", timeStyle: "short" })
+      : "a combinar";
+    return enviarAoCliente(
+      v.email,
+      "Visita técnica confirmada — Lima Construção",
+      `Olá, ${v.nome}.\n\n` +
+        `Sua visita técnica foi confirmada.\n\n` +
+        linha("Data e hora", quando) +
+        linha("Endereço", v.endereco) +
+        `\nSe precisar remarcar, responda este e-mail.`,
+      `confirmação de visita de ${v.nome}`,
+    );
+  }
+  return enviarAoCliente(
+    v.email,
+    "Sobre a sua solicitação de visita — Lima Construção",
+    `Olá, ${v.nome}.\n\n` +
+      `Não foi possível seguir com o agendamento da visita neste momento. ` +
+      `Se ainda tiver interesse, responda este e-mail que retomamos o contato.`,
+    `cancelamento de visita de ${v.nome}`,
+  );
+}
+
+/** Aviso ao cliente sobre o andamento do contrato/obra. */
+export async function enviarAtualizacaoContrato(c: {
+  email: string | null;
+  nome: string;
+  numero: string;
+  status: "EM_EXECUCAO" | "CONCLUIDO" | "CANCELADO";
+  enderecoObra: string;
+}) {
+  const msg: Record<typeof c.status, { assunto: string; texto: string }> = {
+    EM_EXECUCAO: {
+      assunto: `Obra ${c.numero} — execução iniciada`,
+      texto: "A execução da sua obra foi iniciada pela nossa equipe.",
+    },
+    CONCLUIDO: {
+      assunto: `Obra ${c.numero} — concluída`,
+      texto:
+        "A sua obra foi concluída. A garantia de 5 anos passa a valer a partir desta data.",
+    },
+    CANCELADO: {
+      assunto: `Contrato ${c.numero} — cancelado`,
+      texto: "O contrato referente à sua obra foi cancelado.",
+    },
+  };
+  const m = msg[c.status];
+  return enviarAoCliente(
+    c.email,
+    `${m.assunto} — Lima Construção`,
+    `Olá, ${c.nome}.\n\n${m.texto}\n\n` +
+      linha("Contrato", c.numero) +
+      linha("Endereço da obra", c.enderecoObra),
+    `atualização do contrato ${c.numero}`,
+  );
+}
+
 /**
  * Envia o convite de acesso ao painel. Sem SMTP, apenas registra no log — o
  * chamador ainda recebe o link para repassar manualmente.

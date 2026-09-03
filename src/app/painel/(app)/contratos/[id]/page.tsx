@@ -108,6 +108,7 @@ export default async function ContratoDetalhe({ params }: Props) {
               id={c.id}
               status={c.status}
               progresso={c.progresso}
+              temEmail={Boolean(c.clienteEmail)}
             />
           </div>
           <div className="mt-3 h-2 overflow-hidden bg-borda">
@@ -167,6 +168,7 @@ export default async function ContratoDetalhe({ params }: Props) {
             frentes={frentes}
             statusAtual={c.status}
             progressoAtual={c.progresso}
+            temEmail={Boolean(c.clienteEmail)}
           />
         </div>
 

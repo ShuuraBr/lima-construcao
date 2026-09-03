@@ -4,18 +4,23 @@ import { useState } from "react";
 import { mudarStatusContratoAction } from "../actions";
 import { CONTRATO_STATUS, contratoStatusMeta } from "@/lib/painel-shared";
 
+const AVISAVEIS = ["EM_EXECUCAO", "CONCLUIDO", "CANCELADO"];
+
 export function StatusContratoForm({
   id,
   status,
   progresso,
+  temEmail,
 }: {
   id: string;
   status: string;
   progresso: number;
+  temEmail: boolean;
 }) {
   const [s, setS] = useState(status);
   const [p, setP] = useState(String(progresso));
   const mudou = s !== status || p !== String(progresso);
+  const avisaCliente = s !== status && AVISAVEIS.includes(s);
 
   return (
     <form
@@ -61,6 +66,20 @@ export function StatusContratoForm({
       >
         Atualizar
       </button>
+      {avisaCliente && (
+        <label className="flex w-full items-center gap-2 text-[0.72rem] text-texto">
+          <input
+            type="checkbox"
+            name="notificar"
+            defaultChecked={temEmail}
+            disabled={!temEmail}
+            className="accent-roxo"
+          />
+          {temEmail
+            ? "Avisar o cliente por e-mail"
+            : "Cliente sem e-mail cadastrado"}
+        </label>
+      )}
     </form>
   );
 }
