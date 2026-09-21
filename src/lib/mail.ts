@@ -38,7 +38,10 @@ function linha(rotulo: string, valor?: string | number | null) {
   if (valor === undefined || valor === null || valor === "") return "";
   const s = String(valor).trim();
   if (s === "" || s === "undefined" || s === "null") return "";
-  return `${rotulo}: ${s}\n`;
+  return `<tr>
+    <td style="padding: 8px 0; color: #666; font-weight: bold; width: 150px;">${rotulo}</td>
+    <td style="padding: 8px 0; color: #333;">${s}</td>
+  </tr>`;
 }
 
 /**
@@ -48,31 +51,47 @@ function linha(rotulo: string, valor?: string | number | null) {
  */
 export async function enviarNotificacaoOrcamento(pedido: PedidoResumo) {
   const assunto = `Novo orçamento ${pedido.protocolo} — ${pedido.servico}`;
-  const corpo =
-    `Novo pedido de orçamento recebido pelo site.\n\n` +
-    linha("Protocolo", pedido.protocolo) +
-    linha("Nome", pedido.nome) +
-    linha("Empresa", pedido.empresa) +
-    linha("E-mail", pedido.email) +
-    linha("Telefone", pedido.telefone) +
-    `\n` +
-    linha("Serviço", pedido.servico) +
-    linha("Endereço da obra", pedido.enderecoObra) +
-    linha("Metragem", pedido.metragemM2 ? `${pedido.metragemM2} m²` : null) +
-    linha("Prazo desejado", pedido.prazoDesejado) +
-    linha(
-      "Início previsto",
-      pedido.dataInicio
-        ? pedido.dataInicio.toLocaleDateString("pt-BR")
-        : null,
-    ) +
-    linha("Anexo", pedido.anexoNome) +
-    (pedido.mensagem ? `\nMensagem:\n${pedido.mensagem}\n` : "") +
-    `\n— Cotação a ser elaborada manualmente pela equipe da Lima.`;
+  
+  const htmlCorpo = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #d4a017; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0;">Nova Solicitação de Orçamento</h2>
+        <p style="margin: 5px 0 0 0; opacity: 0.9;">Protocolo: ${pedido.protocolo}</p>
+      </div>
+      <div style="padding: 20px;">
+        <p>Olá equipe,</p>
+        <p>Um novo pedido de orçamento foi recebido através do site. Confira os detalhes abaixo:</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          ${linha("Nome", pedido.nome)}
+          ${linha("Empresa", pedido.empresa)}
+          ${linha("E-mail", pedido.email)}
+          ${linha("Telefone", pedido.telefone)}
+          ${linha("Serviço", pedido.servico)}
+          ${linha("Endereço", pedido.enderecoObra)}
+          ${linha("Metragem", pedido.metragemM2 ? `${pedido.metragemM2} m²` : null)}
+          ${linha("Prazo", pedido.prazoDesejado)}
+          ${linha("Início Previsto", pedido.dataInicio ? pedido.dataInicio.toLocaleDateString("pt-BR") : null)}
+          ${linha("Anexo", pedido.anexoNome)}
+        </table>
+
+        ${pedido.mensagem ? `
+          <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #d4a017;">
+            <strong style="display: block; margin-bottom: 5px;">Mensagem do Cliente:</strong>
+            <p style="margin: 0; font-style: italic; color: #555;">${pedido.mensagem}</p>
+          </div>
+        ` : ""}
+
+        <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #999;">
+          <p>— Cotação a ser elaborada manualmente pela equipe da Lima.</p>
+        </div>
+      </div>
+    </div>
+  `;
 
   if (!smtpConfigurado()) {
     console.info(
-      `[mail] SMTP não configurado — notificação de ${pedido.protocolo} não enviada.\n${corpo}`,
+      `[mail] SMTP não configurado — notificação de ${pedido.protocolo} não enviada.`,
     );
     return { enviado: false as const };
   }
@@ -82,7 +101,7 @@ export async function enviarNotificacaoOrcamento(pedido: PedidoResumo) {
     to: process.env.MAIL_TO,
     replyTo: pedido.email,
     subject: assunto,
-    text: corpo,
+    html: htmlCorpo,
     attachments: pedido.anexo
       ? [{ filename: pedido.anexo.filename, content: pedido.anexo.content }]
       : undefined,
@@ -259,4 +278,58 @@ export async function enviarConviteAcesso(params: {
   });
 
   return { enviado: true as const };
+}
+
+/**
+ * Envia um e-mail de confirmação para o cliente informando que o pedido foi recebido.
+ */
+export async function enviarConfirmacaoCliente(pedido: PedidoResumo) {
+  const assunto = `Recebemos seu pedido de orçamento! — ${pedido.protocolo}`;
+  
+  const htmlCorpo = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #333; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0;">Pedido Recebido!</h2>
+        <p style="margin: 5px 0 0 0; opacity: 0.9;">Protocolo: ${pedido.protocolo}</p>
+      </div>
+      <div style="padding: 20px;">
+        <p>Olá <strong>${pedido.nome}</strong>,</p>
+        <p>Confirmamos o recebimento do seu pedido de orçamento para o serviço de <strong>${pedido.servico}</strong>.</p>
+        <p>Nossa equipe técnica já foi notificada e entrará em contato com você em breve para dar continuidade ao atendimento.</p>
+        
+        <div style="margin: 30px 0; text-align: center;">
+          <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Se tiver urgência, você pode nos chamar agora pelo WhatsApp:</p>
+          <a href="${gerarLinkWhatsApp(pedido.telefone)}" 
+             style="background-color: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Chamar no WhatsApp
+          </a>
+        </div>
+
+        <p style="font-size: 13px; color: #888; text-align: center; margin-top: 40px;">
+          Atenciosamente,<br>
+          <strong>Equipe Lima Construções</strong>
+        </p>
+      </div>
+    </div>
+  `;
+
+  if (!smtpConfigurado()) return { enviado: false as const };
+
+  await getTransporter().sendMail({
+    from: process.env.MAIL_FROM,
+    to: pedido.email,
+    subject: assunto,
+    html: htmlCorpo,
+  });
+
+  return { enviado: true as const };
+}
+
+/**
+ * Gera um link de WhatsApp com mensagem personalizada para facilitar o contato.
+ */
+export function gerarLinkWhatsApp(telefone?: string) {
+  const phone = telefone ? telefone.replace(/\D/g, "") : "";
+  const message = encodeURIComponent("Olá! Gostaria de falar sobre o meu pedido de orçamento na Lima Construções.");
+  return `https://wa.me/${phone}?text=${message}`;
 }

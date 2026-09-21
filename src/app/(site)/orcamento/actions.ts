@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/db";
-import { enviarNotificacaoOrcamento } from "@/lib/mail";
+import { enviarNotificacaoOrcamento, enviarConfirmacaoCliente } from "@/lib/mail";
 import { pedidoOrcamentoSchema, servicoParaEnum } from "@/lib/validation";
 import type { ServicoTipo } from "@prisma/client";
 
@@ -148,6 +148,7 @@ export async function enviarPedidoOrcamento(
   let notificado = false;
   try {
     const r = await enviarNotificacaoOrcamento(resumo);
+    await enviarConfirmacaoCliente(resumo);
     notificado = r.enviado;
   } catch (err) {
     console.error("[orcamento] falha ao enviar notificação:", err);
