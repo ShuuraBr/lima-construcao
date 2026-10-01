@@ -133,3 +133,4 @@ pedido fica só no banco).
 - Persistência do arquivo anexado (hoje vai só como anexo do e-mail; limite ~9 MB).
 - Textos e fotos reais das obras (produção a cargo da equipe do projeto).
 - Notificação por WhatsApp Business API (depende de aprovação da Meta).
+# lima
